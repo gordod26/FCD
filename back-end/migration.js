@@ -77,6 +77,22 @@ CREATE UNIQUE INDEX email
 CREATE UNIQUE INDEX token
   ON verification_requests(token);
 `;
+const userPostSchema = `
+CREATE TABLE userposts
+  (
+    id             SERIAL,
+    user_id        INT,
+    title          VARCHAR(100) NOT NULL,
+    url            VARCHAR(255),
+    text           TEXT,
+    votes          INT DEFAULT 1,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+      FOREIGN KEY(user_id)
+        REFERENCES users(id)
+  );
+`;
 //const dpostTblQry = `
 //CREATE TABLE dpost
 //(
@@ -94,5 +110,8 @@ CREATE UNIQUE INDEX token
 //username
 //);
 //`;
-const drpTbl = `DROP TABLE IF EXISTS accounts, sessions, users, verification_requests CASCADE`;
-db.query(drpTbl).then(() => db.query(nextauthschema));
+const drpTbl = `DROP TABLE IF EXISTS accounts, sessions, users, verification_requests, userposts CASCADE`;
+
+db.query(drpTbl)
+  .then(() => db.query(nextauthschema))
+  .then(() => db.query(userPostSchema));
