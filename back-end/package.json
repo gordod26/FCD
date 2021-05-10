@@ -1,0 +1,23 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "back end of FCD website",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "david gordon",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "*",
+    "ejs": "*",
+    "errorhandler": "*",
+    "express": "*",
+    "morgan": "*",
+    "nodemon": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "pg": "*",
+    "sqlite3": "*"
+  }
+}
