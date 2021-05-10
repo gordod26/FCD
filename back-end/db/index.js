@@ -1,5 +1,7 @@
 const { Pool } = require("pg");
 
+//initiate and export pool so you don't have to remake pool object. just import
+// this doc
 const pool = new Pool({
   user: "david",
   host: "localhost",

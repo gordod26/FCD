@@ -1,0 +1,64 @@
+const db = require("./index.js");
+
+// Dposts Dummy Data
+// USERID TITLE URL/TEXT VOTES
+const query = `INSERT INTO Dposts (
+          user_id, title, url, text)
+          VALUES ($1, $2,
+          $3, $4)`;
+
+const values1 = [
+  1,
+  "CS LEWIS COMPLETE COLLECTION",
+  "https://www.cslewis.com/uk/",
+  "",
+];
+const values2 = [
+  1,
+  "Jordan Peterson Biblical Lectures",
+  "https://www.youtube.com/watch?v=f-wWBGo6a2w",
+  "",
+];
+
+const values3 = [
+  1,
+  "Dallas Megachurch Pastor Todd Wagner Resigns,",
+  "https://churchleaders.com/news/395546-dallas-megachurch-pastor-todd-wagner-announces-resignation.html",
+  "",
+];
+
+const values4 = [
+  1,
+  "Question on Jesus' ancestry in a historical, rather than a religious context",
+  "",
+  `Both books consider Jesus a grandson of Herod the Great, through his son Antipater. Though both books have several issues when trying to establish the identity of Mary (for example her being the daughter of the last Hasmonean king Mattatayah Antigonus, which would make her in her 30s giving birth to Jesus and even older with Jesus' borthers, the sons of Joseph), the Antipater link actually makes sense.`,
+];
+
+db.query(query, values1, (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[1]);
+  }
+});
+db.query(query, values2, (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[2]);
+  }
+});
+db.query(query, values3, (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[3]);
+  }
+});
+db.query(query, values4, (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[4]);
+  }
+});

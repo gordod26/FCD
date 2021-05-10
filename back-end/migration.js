@@ -1,8 +1,15 @@
 const db = require("./db");
 
 //create db schema
+// TABLES:
+// * Accounts
+// * Sessions
+// * Users
+// * Verification_requests
+// * Dposts
+
 const nextauthschema = `
-CREATE TABLE accounts
+CREATE TABLE Accounts
   (
     id                   SERIAL,
     compound_id          VARCHAR(255) NOT NULL,
@@ -18,7 +25,7 @@ CREATE TABLE accounts
     PRIMARY KEY (id)
   );
 
-CREATE TABLE sessions
+CREATE TABLE Sessions
   (
     id            SERIAL,
     user_id       INTEGER NOT NULL,
@@ -30,7 +37,7 @@ CREATE TABLE sessions
     PRIMARY KEY (id)
   );
 
-CREATE TABLE users
+CREATE TABLE Users
   (
     id             SERIAL,
     name           VARCHAR(255),
@@ -42,7 +49,7 @@ CREATE TABLE users
     PRIMARY KEY (id)
   );
 
-CREATE TABLE verification_requests
+CREATE TABLE Verification_requests
   (
     id         SERIAL,
     identifier VARCHAR(255) NOT NULL,
@@ -78,7 +85,7 @@ CREATE UNIQUE INDEX token
   ON verification_requests(token);
 `;
 const userPostSchema = `
-CREATE TABLE userposts
+CREATE TABLE Dposts
   (
     id             SERIAL,
     user_id        INT,
@@ -110,7 +117,7 @@ CREATE TABLE userposts
 //username
 //);
 //`;
-const drpTbl = `DROP TABLE IF EXISTS accounts, sessions, users, verification_requests, userposts CASCADE`;
+const drpTbl = `DROP TABLE IF EXISTS Accounts, Sessions, Users, Verification_requests, Dposts CASCADE`;
 
 db.query(drpTbl)
   .then(() => db.query(nextauthschema))
