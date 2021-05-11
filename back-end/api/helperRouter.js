@@ -16,4 +16,16 @@ helperRouter.get("/getidbyemail/:email", (req, res, next) => {
   });
 });
 
+helperRouter.get("/getnamebyid/:id", (req, res, next) => {
+  const sql = `SELECT name FROM users WHERE id=$1`;
+  const values = [req.params.id];
+  db.query(sql, values, (err, r) => {
+    if (err) {
+      next(err);
+    } else {
+      res.status(200).json(r.rows[0].name);
+    }
+  });
+});
+
 module.exports = helperRouter;

@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
 import { useSession } from "next-auth/client";
-import axios from "axios";
-const baseUrl = "http://localhost:5000/api";
 
 //const formReducer = (state, event) => {
 //return {

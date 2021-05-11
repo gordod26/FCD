@@ -1,13 +1,21 @@
 import Head from "next/head";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import Layout from "../components/Layout";
 import Login from "../components/Login";
-import NewsPostLayout from "../components/NewsPostLayout";
+import DpostLayout from "../components/DpostLayout";
+import DpostMap from "../components/DpostMap";
+import Dhelper from "../utils/dPostUtils";
 
 export default function Home() {
   //Authentication session w/ next-auth
+  const [posts, setPosts] = useState();
+
+  useEffect(() => {
+    Dhelper.getDposts(setPosts);
+  }, []);
+
   return (
     <>
       <Head>
@@ -17,7 +25,7 @@ export default function Home() {
       </Head>
       <Layout>
         <h1>Discussion</h1>
-        <NewsPostLayout />
+        <DpostMap posts={posts} />
       </Layout>
     </>
   );

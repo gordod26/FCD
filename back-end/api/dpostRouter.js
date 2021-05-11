@@ -21,6 +21,7 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
   });
 });
 
+//GET ALL DPOSTS
 dpostRouter.get("/", (req, res, next) => {
   db.query(`SELECT * FROM Dposts`, (err, r) => {
     if (err) {
@@ -31,6 +32,7 @@ dpostRouter.get("/", (req, res, next) => {
   });
 });
 
+//GET SPECIFIC DPOST
 dpostRouter.get("/:dpostId", (req, res, next) => {
   db.query(
     `SELECT * FROM Dposts WHERE id = ${req.params.dpostId}`,
