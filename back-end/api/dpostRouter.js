@@ -49,10 +49,10 @@ dpostRouter.get("/:dpostId", (req, res, next) => {
 dpostRouter.post("/", (req, res, next) => {
   const sql = `INSERT INTO Dposts (user_id, title, url, text)
                 VALUES ($1, $2, $3, $4)`;
-  const userId = req.body.dpost.user_id,
-    title = req.body.dpost.title,
-    url = req.body.dpost.url ? req.body.dpost.url : "",
-    text = req.body.dpost.text ? req.body.dpost.text : "";
+  const userId = req.body.userId,
+    title = req.body.title,
+    url = req.body.url ? req.body.dpost.url : "",
+    text = req.body.text ? req.body.text : "";
 
   if (!userId || !title || (url && text) || (!url && !text)) {
     return res.sendStatus(400);
@@ -69,7 +69,7 @@ dpostRouter.post("/", (req, res, next) => {
 
 dpostRouter.put("/:dpostId", (req, res, next) => {
   const sql = `UPDATE Dposts SET user_id=$1, title=$2, url=$3, text=$4 WHERE id = $5`;
-  const userId = req.body.dpost.user_id,
+  const userId = req.body.dpost.userId,
     title = req.body.dpost.title,
     url = req.body.dpost.url ? req.body.dpost.url : "",
     text = req.body.dpost.text ? req.body.dpost.text : "",

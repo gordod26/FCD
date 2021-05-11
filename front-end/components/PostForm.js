@@ -1,16 +1,20 @@
 import React from "react";
 import { useState, useReducer } from "react";
+import Dhelper from "../utils/dPostUtils";
+import { useSession } from "next-auth/client";
 
-const formReducer = (state, event) => {
-  return {
-    ...state,
-    [event.name]: event.value,
-  };
-};
+//const formReducer = (state, event) => {
+//return {
+//...state,
+//[event.name]: event.value,
+//};
+//};
 
 export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
-  const [submitting, setSubmitting] = useState({
+  const [session, loading] = useSession();
+  const [post, setPost] = useState({
+    userId: 1,
     title: "",
     url: "",
     text: "",
@@ -21,23 +25,23 @@ export default function PostForm() {
     const value = target.value;
     const name = target.name;
 
-    setSubmitting({
-      ...submitting,
+    setPost({
+      ...post,
       [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
-    alert("a post was submitted:");
-    console.log(submitting);
+    Dhelper.createDpost(post);
+    console.log(post);
     e.preventDefault();
   };
   //const handleSubmit = (event) => {
   //event.preventDefault();
-  //setSubmitting(true);
+  //setPost(true);
 
   //setTimeout(() => {
-  //setSubmitting(false);
+  //setPost(false);
   //}, 3000);
   //};
 
@@ -52,30 +56,30 @@ export default function PostForm() {
     <div>
       <h1>Share</h1>
       <form onSubmit={handleSubmit}>
-        <label for="title">Title </label>
+        <label htmlFor="title">Title </label>
         <input
           type="title"
           id="title"
           name="title"
-          value={submitting.title}
+          value={post.title}
           onChange={handleInputChange}
         />
         <br />
-        <label for="url">URL </label>
+        <label htmlFor="url">URL </label>
         <input
           type="url"
           name="url"
-          value={submitting.url}
+          value={post.url}
           onChange={handleInputChange}
         />
         <br />
         <b>or</b>
         <br />
-        <label for="text">Text </label>
+        <label htmlFor="text">Text </label>
         <textarea
           id="text"
           name="text"
-          value={submitting.text}
+          value={post.text}
           onChange={handleInputChange}
         />
         <br />
