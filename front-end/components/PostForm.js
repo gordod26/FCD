@@ -22,12 +22,6 @@ export default function PostForm() {
     url: "",
     text: "",
   });
-  //test var session is returning user email
-  console.log("return user email //", session.user.email);
-  console.log(
-    "func getidbyemail returns id when passed good email //",
-    getidbyemail("david.gordon266@gmail.com")
-  );
 
   const handleInputChange = (e) => {
     const target = e.target;
@@ -61,18 +55,23 @@ export default function PostForm() {
   //});
   //};
   useEffect(() => {
-    axios
-      .get(
-        `http://localhost:5000/api/helper/getidbyemail/${session.user.email}`
-      )
-      .then(function (response) {
-        console.log(response.data);
-        setPost({ ...post, userId: response.data });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    getidbyemail(session.user.email, post, setPost);
   }, []);
+  //useEffect(() => {
+  //axios
+  //.get(
+  //`http://localhost:5000/api/helper/getidbyemail/${session.user.email}`
+  //)
+  //.then(function (response) {
+  //console.log(
+  //`EMAIL ${session.user.email} // RETURNS ID ${response.data}`
+  //);
+  //setPost({ ...post, userId: response.data });
+  //})
+  //.catch(function (error) {
+  //console.log(error);
+  //});
+  //}, []);
   return (
     <div>
       <h1>Share</h1>
