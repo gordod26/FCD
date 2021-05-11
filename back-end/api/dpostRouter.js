@@ -1,4 +1,3 @@
-const { response } = require("express");
 const express = require("express");
 const db = require("../db");
 
@@ -10,11 +9,11 @@ const dpostRouter = express.Router();
 dpostRouter.param("dpostId", (req, res, next, dpostId) => {
   const sql = "SELECT * FROM Dposts WHERE Dposts.id = $1";
   const values = [dpostId];
-  db.query(sql, values, (err, request) => {
+  db.query(sql, values, (err, r) => {
     if (err) {
       next(err);
-    } else if (request.rows) {
-      req.dposts = request.rows;
+    } else if (r.rows) {
+      req.dposts = r.rows;
       next();
     } else {
       res.sendStatus(404);
@@ -23,11 +22,11 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
 });
 
 dpostRouter.get("/", (req, res, next) => {
-  db.query(`SELECT * FROM Dposts`, (err, request) => {
+  db.query(`SELECT * FROM Dposts`, (err, r) => {
     if (err) {
       next(err);
     } else {
-      res.status(200).json(request.rows);
+      res.status(200).json(r.rows);
     }
   });
 });
@@ -35,11 +34,11 @@ dpostRouter.get("/", (req, res, next) => {
 dpostRouter.get("/:dpostId", (req, res, next) => {
   db.query(
     `SELECT * FROM Dposts WHERE id = ${req.params.dpostId}`,
-    (err, request) => {
+    (err, r) => {
       if (err) {
         next(err);
       } else {
-        res.status(200).json({ dpost: request.rows });
+        res.status(200).json({ dpost: r.rows });
       }
     }
   );
@@ -51,7 +50,7 @@ dpostRouter.post("/", (req, res, next) => {
                 VALUES ($1, $2, $3, $4)`;
   const userId = req.body.userId,
     title = req.body.title,
-    url = req.body.url ? req.body.dpost.url : "",
+    url = req.body.url ? req.body.url : "",
     text = req.body.text ? req.body.text : "";
 
   if (!userId || !title || (url && text) || (!url && !text)) {

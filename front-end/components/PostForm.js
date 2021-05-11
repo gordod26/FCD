@@ -1,7 +1,10 @@
 import React from "react";
-import { useState, useReducer } from "react";
+import { useState, useEffect } from "react";
 import Dhelper from "../utils/dPostUtils";
+import { getidbyemail } from "../utils/helpers";
 import { useSession } from "next-auth/client";
+import axios from "axios";
+const baseUrl = "http://localhost:5000/api";
 
 //const formReducer = (state, event) => {
 //return {
@@ -14,11 +17,17 @@ export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
   const [session, loading] = useSession();
   const [post, setPost] = useState({
-    userId: 1,
+    userId: "",
     title: "",
     url: "",
     text: "",
   });
+  //test var session is returning user email
+  console.log("return user email //", session.user.email);
+  console.log(
+    "func getidbyemail returns id when passed good email //",
+    getidbyemail("david.gordon266@gmail.com")
+  );
 
   const handleInputChange = (e) => {
     const target = e.target;
@@ -51,7 +60,19 @@ export default function PostForm() {
   //value: event.target.value,
   //});
   //};
-
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:5000/api/helper/getidbyemail/${session.user.email}`
+      )
+      .then(function (response) {
+        console.log(response.data);
+        setPost({ ...post, userId: response.data });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
   return (
     <div>
       <h1>Share</h1>
