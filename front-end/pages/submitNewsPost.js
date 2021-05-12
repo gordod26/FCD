@@ -50,8 +50,8 @@ export default function SubmitNewsPost() {
     console.log("gettting userId");
     getidbyemail(session.user.email, userId, setUserId);
   } else if (userId && !userPosts) {
-    console.log("user ID is", userId.userId.id);
-    Dhelper.getUserPosts(userId.userId.id, setUserPosts);
+    console.log("user ID is", userId.userId);
+    Dhelper.getUserPosts(userId.userId, setUserPosts);
   } else if (userId && userPosts) {
   }
 

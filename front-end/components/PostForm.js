@@ -4,13 +4,6 @@ import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
 import { useSession } from "next-auth/client";
 
-//const formReducer = (state, event) => {
-//return {
-//...state,
-//[event.name]: event.value,
-//};
-//};
-
 export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
   const [session, loading] = useSession();
@@ -36,44 +29,28 @@ export default function PostForm() {
     Dhelper.createDpost(post);
     console.log(post);
     e.preventDefault();
+    setPost({
+      ...post,
+      title: "",
+      url: "",
+      text: "",
+    });
   };
-  //const handleSubmit = (event) => {
-  //event.preventDefault();
-  //setPost(true);
 
-  //setTimeout(() => {
-  //setPost(false);
-  //}, 3000);
-  //};
-
-  //const handleChange = (event) => {
-  //setFormData({
-  //name: event.target.name,
-  //value: event.target.value,
-  //});
-  //};
   useEffect(() => {
     getidbyemail(session.user.email, post, setPost);
   }, []);
-  //useEffect(() => {
-  //axios
-  //.get(
-  //`http://localhost:5000/api/helper/getidbyemail/${session.user.email}`
-  //)
-  //.then(function (response) {
-  //console.log(
-  //`EMAIL ${session.user.email} // RETURNS ID ${response.data}`
-  //);
-  //setPost({ ...post, userId: response.data });
-  //})
-  //.catch(function (error) {
-  //console.log(error);
-  //});
-  //}, []);
+
   return (
     <div>
       <h1>Share</h1>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={function () {
+          if (confirm("Submit Post?")) {
+            handleSubmit();
+          }
+        }}
+      >
         <label htmlFor="title">Title </label>
         <input
           type="title"

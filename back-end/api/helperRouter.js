@@ -11,7 +11,7 @@ helperRouter.get("/getidbyemail/:email", (req, res, next) => {
     if (err) {
       next(err);
     } else {
-      res.status(200).json(r.rows[0]);
+      res.status(200).json(r.rows[0].id);
     }
   });
 });

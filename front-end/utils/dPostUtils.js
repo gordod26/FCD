@@ -49,4 +49,16 @@ Dhelper.createDpost = (post) => {
 
 //Dhelper.updateDpost
 //Dhelper.deleteDpost
+Dhelper.deleteDpost = (id) => {
+  const url = `${baseUrl}/dpost/${id}`;
+  axios
+    .delete(url)
+    .then(function (response) {
+      console.log("postDeleted", response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 export default Dhelper;

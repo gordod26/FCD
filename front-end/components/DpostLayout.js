@@ -2,19 +2,24 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { getnamebyid } from "../utils/helpers";
 import { useSession } from "next-auth/client";
+import Dhelper from "../utils/dPostUtils";
 
 export default NewsPostLayout;
 
 function NewsPostLayout(props) {
   const [session, loading] = useSession();
-  const [posterName, setPosterName] = useState({});
+  const [posterName, setPosterName] = useState({ username: "" });
 
   const title = props.title;
   const url = props.url;
   const text = props.text;
   const points = props.points;
   const posterId = props.poster;
+  const id = props.id;
   var postDate = props.created.slice(0, props.created.indexOf("T"));
+  const handleDelete = () => {
+    Dhelper.deleteDpost(id);
+  };
 
   //  console.log("DpostLayout posterid:", posterId);
   // console.log(props);
@@ -69,7 +74,15 @@ function NewsPostLayout(props) {
         </Link>
         <span> | {postDate} | </span>
         {session.user.name === posterName.username ? (
-          <button>Trash</button>
+          <button
+            onClick={function () {
+              if (confirm("Delete permanently?")) {
+                handleDelete();
+              }
+            }}
+          >
+            Trash
+          </button>
         ) : (
           ""
         )}
