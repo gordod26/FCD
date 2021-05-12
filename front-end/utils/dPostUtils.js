@@ -8,7 +8,7 @@ Dhelper.getDposts = (setState) => {
   axios
     .get(url)
     .then(function (response) {
-      console.log(response.data);
+      console.log("getDposts response data //", response.data);
       return setState(response.data);
     })
     .catch(function (error) {

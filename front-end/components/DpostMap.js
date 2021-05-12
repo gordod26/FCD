@@ -16,6 +16,7 @@ function DpostMap(props) {
                   url={post.url}
                   points={post.points}
                   poster={post.user_id}
+                  created={post.created_at}
                 />
               </li>
             );

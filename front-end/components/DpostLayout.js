@@ -14,8 +14,10 @@ function NewsPostLayout(props) {
   const text = props.text;
   const points = props.points;
   const posterId = props.poster;
+  var postDate = props.created.slice(0, props.created.indexOf("T"));
 
-  console.log("DpostLayout posterid:", posterId);
+  //  console.log("DpostLayout posterid:", posterId);
+  // console.log(props);
 
   useEffect(() => {
     getnamebyid(posterId, posterName, setPosterName);
@@ -47,11 +49,6 @@ function NewsPostLayout(props) {
   //console.log(posterName);
 
   //adds trash button to post if session user also posted message
-  const renderTrash = (posterName) => {
-    if (session.user.name === posterName.username) {
-      return <button>Trash</button>;
-    }
-  };
 
   return (
     <div style={{ border: "1px solid grey" }}>
@@ -70,6 +67,7 @@ function NewsPostLayout(props) {
         <Link href="/comments">
           <a>comments</a>
         </Link>
+        <span> | {postDate}</span>
         {session.user.name === posterName.username ? (
           <button>Trash</button>
         ) : (
