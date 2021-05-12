@@ -32,6 +32,19 @@ dpostRouter.get("/", (req, res, next) => {
   });
 });
 
+//GET DPOST BY USERID /userposts/:userId
+dpostRouter.get("/userposts/:userId", (req, res, next) => {
+  db.query(
+    `SELECT * FROM Dposts WHERE user_id = ${req.params.userId}`,
+    (err, r) => {
+      if (err) {
+        next(err);
+      } else {
+        res.status(200).json(r.rows);
+      }
+    }
+  );
+});
 //GET SPECIFIC DPOST
 dpostRouter.get("/:dpostId", (req, res, next) => {
   db.query(

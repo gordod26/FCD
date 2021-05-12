@@ -4,26 +4,31 @@ import { signIn } from "next-auth/client";
 import Head from "next/head";
 import Layout from "../components/Layout";
 import PostForm from "../components/PostForm";
+import { getidbyemail } from "../utils/helpers";
+import Dhelper from "../utils/dPostUtils";
+import DpostMap from "../components/DpostMap";
 
 export default function SubmitNewsPost() {
   const [session, loading] = useSession();
-  const [content, setContent] = useState();
+  const [userPosts, setUserPosts] = useState();
+  const [userId, setUserId] = useState();
+  //const [content, setContent] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/secret/");
-      const json = await res.json();
+  //useEffect(() => {
+  //const fetchData = async () => {
+  //const res = await fetch("/api/secret/");
+  //const json = await res.json();
 
-      if (json.content) {
-        setContent(json.content);
-      }
-    };
-    fetchData();
-  }, [session]);
+  //if (json.content) {
+  //setContent(json.content);
+  //}
+  //};
+  //fetchData();
+  //}, [session]);
 
   // if page hasn't rendered don't display anything
-  if (typeof window !== "undefined" && loading) return null;
 
+  //if (typeof window !== "undefined" && loading) return null;
   if (!session) {
     return (
       <Layout>
@@ -40,6 +45,16 @@ export default function SubmitNewsPost() {
     );
   }
 
+  //Dhelper.getUserPosts(userId, setUserPosts);
+  if (!userId) {
+    console.log("gettting userId");
+    getidbyemail(session.user.email, userId, setUserId);
+  } else if (userId && !userPosts) {
+    console.log("user ID is", userId.userId.id);
+    Dhelper.getUserPosts(userId.userId.id, setUserPosts);
+  } else if (userId && userPosts) {
+  }
+
   return (
     <Layout>
       <Head>
@@ -52,6 +67,10 @@ export default function SubmitNewsPost() {
             Leave url blank to submit a question for discussion. If there is no
             url, the text (if any) will appear at the top of the thread.
           </p>
+        </div>
+        <h2>My Post History</h2>
+        <div>
+          <DpostMap posts={userPosts} />
         </div>
       </main>
     </Layout>

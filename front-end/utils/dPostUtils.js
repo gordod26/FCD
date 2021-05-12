@@ -9,15 +9,26 @@ Dhelper.getDposts = (setState) => {
     .get(url)
     .then(function (response) {
       console.log(response.data);
-      return setState(() => {
-        return response.data;
-      });
+      return setState(response.data);
     })
     .catch(function (error) {
       console.log(error);
     });
 };
-//DHelper.getDpost
+//DHelper.getUsersPosts
+Dhelper.getUserPosts = (id, setState) => {
+  const url = `${baseUrl}/dpost/userposts/${id}`;
+  axios
+    .get(url)
+    .then(function (response) {
+      console.log(response.data);
+      setState(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 //Dhelper.createDpost
 Dhelper.createDpost = (post) => {
   const url = `${baseUrl}/dpost`;
