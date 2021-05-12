@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Dhelper from "../utils/dPostUtils";
-import { useSession } from "next-auth/client";
 import DpostLayout from "./DpostLayout";
 
 function DpostMap(props) {
