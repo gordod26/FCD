@@ -67,7 +67,7 @@ function NewsPostLayout(props) {
         <Link href="/comments">
           <a>comments</a>
         </Link>
-        <span> | {postDate}</span>
+        <span> | {postDate} | </span>
         {session.user.name === posterName.username ? (
           <button>Trash</button>
         ) : (
