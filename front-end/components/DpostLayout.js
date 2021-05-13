@@ -74,15 +74,15 @@ function NewsPostLayout(props) {
         </Link>
         <span> | {postDate} | </span>
         {session.user.name === posterName.username ? (
-          <button
-            onClick={function () {
-              if (confirm("Delete permanently?")) {
+          <form
+            onSubmit={function () {
+              if (confirm("Delete Post Permanently?")) {
                 handleDelete();
               }
             }}
           >
-            Trash
-          </button>
+            <input type="submit" value="Trash" />
+          </form>
         ) : (
           ""
         )}
