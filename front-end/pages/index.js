@@ -7,14 +7,20 @@ import Login from "../components/Login";
 import DpostLayout from "../components/DpostLayout";
 import DpostMap from "../components/DpostMap";
 import Dhelper from "../utils/dPostUtils";
+import axios from "axios";
 
-export default function Home() {
+export default function Home({ allPostsData }) {
   //Authentication session w/ next-auth
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState(allPostsData);
+  console.log("cmonnnnnnnnn", posts);
 
-  useEffect(() => {
-    Dhelper.getDposts(setPosts);
-  }, []);
+  //useEffect(() => {
+  //Dhelper.getDposts(setPosts);
+  //}, []);
+
+  //useEffect(() => {
+  //Dhelper.getDataForStatic();
+  //}, []);
 
   return (
     <>
@@ -29,4 +35,16 @@ export default function Home() {
       </Layout>
     </>
   );
+}
+
+// This works when I put axios directly in function but not importing it
+export async function getStaticProps() {
+  const allPostsData = await axios
+    .get(`http://localhost:5000/api/dpost/`)
+    .then(function (response) {
+      return response.data;
+    });
+  return {
+    props: { allPostsData },
+  };
 }

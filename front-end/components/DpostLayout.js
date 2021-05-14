@@ -60,33 +60,43 @@ function NewsPostLayout(props) {
       {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
       <span>{postInfo.rank} </span>
       */}
-      <button>Upvote</button>
+      {/*<button>Upvote</button>*/}
+      {url ? (
+        <p>
+          <a href={url}>{title} </a>
+          <sub>
+            <a href={url}>({url})</a>
+          </sub>
+        </p>
+      ) : (
+        <p>
+          <Link href={`/post/${id}`}>
+            <a>{title} </a>
+          </Link>
+          <sub>(text)</sub>
+        </p>
+      )}
       <p>
-        <a href={url}>{title} </a>
-        <sub>
-          <a href={url}>({url})</a>
-        </sub>
-      </p>
-      <p>
-        {points} Pts by {posterName.username} | hide | {/*numComments*/}{" "}
+        {/*{points} Pts */}By {posterName.username} {/*| hide*/} |{" "}
+        {/*numComments*/}{" "}
         <Link href="/comments">
           <a>comments</a>
         </Link>
-        <span> | {postDate} | </span>
-        {session.user.name === posterName.username ? (
-          <form
-            onSubmit={function () {
-              if (confirm("Delete Post Permanently?")) {
-                handleDelete();
-              }
-            }}
-          >
-            <input type="submit" value="Trash" />
-          </form>
-        ) : (
-          ""
-        )}
+        <span> | {postDate} </span>
       </p>
+      {session.user.name === posterName.username ? (
+        <form
+          onSubmit={function () {
+            if (confirm("Delete Post Permanently?")) {
+              handleDelete();
+            }
+          }}
+        >
+          <input type="submit" value="Trash" />
+        </form>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

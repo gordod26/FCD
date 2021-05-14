@@ -61,4 +61,12 @@ Dhelper.deleteDpost = (id) => {
     });
 };
 
+// Tried to use this for getstatic props but had to manually do it instead.
+//Dhelper.getDataForStatic = () => {
+//const url = `http://localhost:5000/api/dpost/`;
+//axios.get(`http://localhost:5000/api/dpost/`).then(function (response) {
+//return response.data;
+//});
+//};
+
 export default Dhelper;
