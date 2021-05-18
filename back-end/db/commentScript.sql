@@ -30,4 +30,19 @@ values (1, 15, 0, 'this is the second parent comment', 5, '0.4');
 insert into fellowshipdb.public.cmmts
 (user_id, dpost_id, parent_comment_id, cmmt, votes, path)
 values (1, 15, 0, 'this is the second child comment', 5, '0.4.5');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 16, 0, 'this is the parent comment', 5, '0.6');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 16, 1, 'this is the child comment', 2, '0.6.7');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 16, 0, 'this is the baby comment', 5, '0.6.7.8');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 16, 0, 'this is the second parent comment', 5, '0.9');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 16, 0, 'this is the second child comment', 5, '0.9.10');
 
