@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import CommentLayout from "../../components/CommentLayout";
 import Layout from "../../components/Layout";
 import axios from "axios";
 import Link from "next/link";
@@ -64,14 +65,17 @@ export default function Post({ post }) {
         <p>{p.text ? p.text : p.url}</p>
         <p>{p.created_at.slice(0, p.created_at.indexOf("T"))}</p>
         <div>
+          <h3>be the first to comment!</h3>
           {!commentBox ? (
-            <button
-              onClick={function () {
-                setCommentBox(true);
-              }}
-            >
-              comment
-            </button>
+            <div>
+              <button
+                onClick={function () {
+                  setCommentBox(true);
+                }}
+              >
+                Comment
+              </button>
+            </div>
           ) : (
             <form
               onSubmit={function () {
@@ -91,6 +95,7 @@ export default function Post({ post }) {
             </form>
           )}
         </div>
+        <CommentLayout />
       </div>
     </Layout>
   );
