@@ -37,6 +37,21 @@ const values4 = [
   `Both books consider Jesus a grandson of Herod the Great`,
   1,
 ];
+const comments = `insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 15, 0, 'this is the parent comment', 5, '0.1');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 15, 1, 'this is the child comment', 2, '0.2');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 15, 0, 'this is the baby comment', 5, '0.1.2.3');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 15, 0, 'this is the second parent comment', 5, '0.4');
+insert into fellowshipdb.public.cmmts
+(user_id, dpost_id, parent_comment_id, cmmt, votes, path)
+values (1, 15, 0, 'this is the second child comment', 5, '0.4.5');`;
 
 db.query(query, values1, (err, res) => {
   if (err) {
@@ -60,6 +75,13 @@ db.query(query, values3, (err, res) => {
   }
 });
 db.query(query, values4, (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[0]);
+  }
+});
+db.query(comments, (err, res) => {
   if (err) {
     console.log(err.stack);
   } else {

@@ -100,6 +100,25 @@ CREATE TABLE Dposts
         REFERENCES users(id)
   );
 `;
+
+const cmmtsSchema = `
+CREATE TABLE fellowshipdb.public.cmmts (
+id SERIAL,
+user_id integer not null,
+dpost_id integer not null,
+parent_comment_id int not null default 0,
+cmmt text not null,
+votes int default 1,
+path ltree,
+primary key (id),
+foreign key (dpost_id) references dposts(id),
+foreign key (user_id) references users(id));
+
+CREATE INDEX path_gist_comments_idx ON fellowshipdb.public.cmmts USING GIST(path);
+CREATE INDEX path_comments_idx ON fellowshipdb.public.cmmts USING btree(path);
+
+`;
+
 //const dpostTblQry = `
 //CREATE TABLE dpost
 //(
@@ -117,8 +136,16 @@ CREATE TABLE Dposts
 //username
 //);
 //`;
-const drpTbl = `DROP TABLE IF EXISTS Accounts, Sessions, Users, Verification_requests, Dposts CASCADE`;
+const drpTbl = `DROP TABLE IF EXISTS
+Accounts,
+Sessions,
+Users,
+Verification_requests,
+Dposts,
+Cmmts,
+CASCADE`;
 
 db.query(drpTbl)
   .then(() => db.query(nextauthschema))
-  .then(() => db.query(userPostSchema));
+  .then(() => db.query(userPostSchema))
+  .then(() => db.query(cmmtsSchema));
