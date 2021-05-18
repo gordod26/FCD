@@ -32,6 +32,21 @@ dpostRouter.get("/", (req, res, next) => {
   });
 });
 
+// GET ALL DPOST IDs for GETSTATICPATHS
+dpostRouter.get("/dpostids", (req, res, next) => {
+  db.query(`SELECT id FROM Dposts`, (err, r) => {
+    if (err) {
+      next(err);
+    } else {
+      const mappedids = r.rows.map((row) => {
+        const index = row.id.toString();
+        return { params: { index } };
+      });
+      res.status(200).json(mappedids);
+    }
+  });
+});
+
 //GET DPOST BY USERID /userposts/:userId
 dpostRouter.get("/userposts/:userId", (req, res, next) => {
   db.query(

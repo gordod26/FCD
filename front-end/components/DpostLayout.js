@@ -70,7 +70,7 @@ function NewsPostLayout(props) {
         </p>
       ) : (
         <p>
-          <Link href={`/post/${id}`}>
+          <Link href={`/pages/${id}`}>
             <a>{title} </a>
           </Link>
           <sub>(text)</sub>
