@@ -70,7 +70,7 @@ function NewsPostLayout(props) {
         </p>
       ) : (
         <p>
-          <Link href={`/pages/${id}`}>
+          <Link href={`/posts/${id}`}>
             <a>{title} </a>
           </Link>
           <sub>(text)</sub>
@@ -79,7 +79,7 @@ function NewsPostLayout(props) {
       <p>
         {/*{points} Pts */}By {posterName.username} {/*| hide*/} |{" "}
         {/*numComments*/}{" "}
-        <Link href="/comments">
+        <Link href={`/posts/${id}`}>
           <a>comments</a>
         </Link>
         <span> | {postDate} </span>
