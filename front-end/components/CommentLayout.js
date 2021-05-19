@@ -50,7 +50,13 @@ export default function Comment(props) {
   };
 
   return (
-    <div style={{ border: "1px solid grey", marginLeft: "50px" }}>
+    <div
+      style={{
+        borderLeft: "1px solid grey",
+        marginLeft: "50px",
+        marginBottom: "10px",
+      }}
+    >
       <b>userId:{props.comment.user_id}</b>
       <p>
         comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
