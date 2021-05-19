@@ -7,7 +7,7 @@ const dpostRouter = express.Router();
 // PARAM: dpostId
 
 dpostRouter.param("dpostId", (req, res, next, dpostId) => {
-  const sql = "SELECT * FROM Dposts WHERE Dposts.id = $1";
+  const sql = "SELECT * FROM dposts WHERE dposts.id = $1";
   const values = [dpostId];
   db.query(sql, values, (err, r) => {
     if (err) {

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Dhelper } from "../utils/dPostUtils";
 
-export default function Comment({ cmmt }) {
+export default function Comment(props) {
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState("");
+  console.log(props.cmmts[0]);
 
   const handleInputChange = (e) => {
     const target = e.target;

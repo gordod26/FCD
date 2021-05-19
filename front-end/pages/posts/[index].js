@@ -18,22 +18,44 @@ export async function getStaticPaths() {
   };
 }
 export async function getStaticProps(context) {
-  const id = context.params.index;
-  const res = await fetch(`http://localhost:5000/api/dpost/${id}`).then(
+  const postId = context.params.index;
+  const postRes = await fetch(`http://localhost:5000/api/dpost/${postId}`).then(
     function (response) {
       return response.json();
     }
   );
+  const cmmtRes = await axios
+    .get(`http://localhost:5000/api/comments/dpost/${postId}`)
+    .then(function (response) {
+      return response.data;
+    });
+  //const cmmtRes = await fetch(
+  //`http://localhost:5000/api/comment/${postId}`
+  //).then(async function (response) {
+  //try {
+  //const data = await response.json();
+  //console.log("response data?", data);
+  //} catch (error) {
+  //console.log("Error happened here!");
+  //console.error(error);
+  //}
+  //});
+
   return {
-    props: { post: res },
+    props: {
+      post: postRes,
+      cmmts: cmmtRes,
+    },
   };
 }
 
-export default function Post({ post }) {
+export default function Post({ post, cmmts }) {
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState("");
 
   const p = post.dpost[0];
+  const c = cmmts;
+  console.log("comment layout data", c);
 
   const handleSubmit = (e) => {
     setCommentBox(false);
@@ -95,7 +117,7 @@ export default function Post({ post }) {
             </form>
           )}
         </div>
-        <CommentLayout />
+        <CommentLayout cmmts={c} />
       </div>
     </Layout>
   );
