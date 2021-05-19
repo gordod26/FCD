@@ -1,10 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Dhelper } from "../utils/dPostUtils";
 
 export default function Comment(props) {
+  const allComments = props.allComments;
+  const filteredComments = props.comment
+    ? allComments.filter((c) => c.parent_comment_id === props.comment.id)
+    : "";
+  console.log("props:", props);
+  console.log("filteredComments:", filteredComments);
+  console.log("allComments prop", allComments);
+
+  //const [propsChecker, setPropsChecker] = useState(function () {
+  //if (props.comment) {
+  //return true;
+  //} else {
+  //return false;
+  //}
+  //});
   const [commentBox, setCommentBox] = useState(false);
-  const [comment, setComment] = useState("");
-  console.log(props.cmmts[0]);
+  const [comment, setComment] = useState(props.comment);
+  const [childComments, setchildComments] = useState(filteredComments);
+  console.log("childComments of commentLayout", childComments);
+
+  //childComments = () => {
+  //const { comment, allComments } = props;
+  //return allComments.filter((c) => c.parent_comment_id === comment.id);
+  //};
 
   const handleInputChange = (e) => {
     const target = e.target;
@@ -29,9 +50,12 @@ export default function Comment(props) {
   };
 
   return (
-    <div style={{ border: "1px solid grey" }}>
-      <b>username:{/*cmmt.user*/}</b>
-      <p>comment text .... {/*cmmt.text*/}</p>
+    <div style={{ border: "1px solid grey", marginLeft: "50px" }}>
+      <b>userId:{props.comment.user_id}</b>
+      <p>
+        comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
+      </p>
+
       {!commentBox ? (
         <div>
           <button
@@ -60,6 +84,9 @@ export default function Comment(props) {
           <input type="submit" value="Submit" />
         </form>
       )}
+      {childComments.map((c) => (
+        <Comment comment={c} allComments={props.allComments} />
+      ))}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import CommentMap from "../../components/CommentMap";
 import CommentLayout from "../../components/CommentLayout";
 import Layout from "../../components/Layout";
 import axios from "axios";
@@ -29,17 +30,6 @@ export async function getStaticProps(context) {
     .then(function (response) {
       return response.data;
     });
-  //const cmmtRes = await fetch(
-  //`http://localhost:5000/api/comment/${postId}`
-  //).then(async function (response) {
-  //try {
-  //const data = await response.json();
-  //console.log("response data?", data);
-  //} catch (error) {
-  //console.log("Error happened here!");
-  //console.error(error);
-  //}
-  //});
 
   return {
     props: {
@@ -117,7 +107,7 @@ export default function Post({ post, cmmts }) {
             </form>
           )}
         </div>
-        <CommentLayout cmmts={c} />
+        <CommentMap cmmts={c} />
       </div>
     </Layout>
   );
