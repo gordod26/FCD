@@ -23,13 +23,16 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
 
 //GET ALL DPOSTS
 dpostRouter.get("/", (req, res, next) => {
-  db.query(`SELECT * FROM Dposts`, (err, r) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json(r.rows);
+  db.query(
+    `SELECT dposts.*, name, email, image FROM Dposts, users WHERE dposts.user_id = users.id`,
+    (err, r) => {
+      if (err) {
+        next(err);
+      } else {
+        res.status(200).json(r.rows);
+      }
     }
-  });
+  );
 });
 
 // GET ALL DPOST IDs for GETSTATICPATHS

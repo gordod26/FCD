@@ -1,5 +1,5 @@
 const axios = require("axios");
-const cmmtHelper = {};
+export const cmmtHelper = {};
 const baseUrl = "http://localhost:5000/api";
 
 //cmmtHelper.getCmmts
@@ -16,15 +16,15 @@ cmmtHelper.getCmmts = (setState) => {
     });
 };
 
-//Dhelper.createDpost
-Dhelper.createDpost = (comment) => {
-  const url = `${baseUrl}/dpost`;
+//cmmtHelper.postCmmt
+cmmtHelper.createCmmt = (comment) => {
+  const url = `${baseUrl}/comments/dpost/${comment.dpostId}`;
   axios
     .post(url, {
       userId: comment.userId,
-      title: comment.title,
-      url: comment.url,
-      text: comment.text,
+      dpostId: comment.dpostId,
+      cmmt: comment.cmmt,
+      path: comment.path,
     })
     .then(function (response) {
       console.log(response);

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { cmmtHelper } from "../../utils/cmmtHelper";
 import CommentMap from "../../components/CommentMap";
 import CommentLayout from "../../components/CommentLayout";
 import Layout from "../../components/Layout";
@@ -41,7 +42,13 @@ export async function getStaticProps(context) {
 
 export default function Post({ post, cmmts }) {
   const [commentBox, setCommentBox] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState({
+    userId: post.dpost[0].user_id,
+    dpostId: post.dpost[0].id,
+    path: `${post.dpost[0].id}`,
+  });
+  console.log("comment state:", comment);
+  console.log("post prop:", post.dpost[0].id);
 
   const p = post.dpost[0];
   const c = cmmts;
@@ -49,15 +56,12 @@ export default function Post({ post, cmmts }) {
 
   const handleSubmit = (e) => {
     setCommentBox(false);
-    Dhelper.createDpost(post);
-    //console.log(post);
-    //e.preventDefault();
-    //setPost({
-    //...post,
-    //title: "",
-    //url: "",
-    //text: "",
-    //});
+    cmmtHelper.createCmmt(comment);
+    console.log(comment);
+    setComment({
+      ...comment,
+      cmmt: "",
+    });
   };
 
   const handleInputChange = (e) => {
@@ -66,6 +70,7 @@ export default function Post({ post, cmmts }) {
     const name = target.name;
 
     setComment({
+      ...comment,
       [name]: value,
     });
   };
@@ -97,8 +102,8 @@ export default function Post({ post, cmmts }) {
               }}
             >
               <textarea
-                id="text"
-                name="text"
+                id="cmmt"
+                name="cmmt"
                 value={comment.text}
                 onChange={handleInputChange}
               />

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { getnamebyid } from "../utils/helpers";
 import { useSession } from "next-auth/client";
 import Dhelper from "../utils/dPostUtils";
 
@@ -8,7 +7,7 @@ export default NewsPostLayout;
 
 function NewsPostLayout(props) {
   const [session, loading] = useSession();
-  const [posterName, setPosterName] = useState({ username: "" });
+  const [posterName, setPosterName] = useState(props.name);
 
   const title = props.title;
   const url = props.url;
@@ -24,9 +23,6 @@ function NewsPostLayout(props) {
   //  console.log("DpostLayout posterid:", posterId);
   // console.log(props);
 
-  useEffect(() => {
-    getnamebyid(posterId, posterName, setPosterName);
-  }, []);
   if (!session) {
     return (
       <div style={{ border: "1px solid grey" }}>
@@ -41,7 +37,7 @@ function NewsPostLayout(props) {
           </sub>
         </p>
         <p>
-          {points} Pts by {posterName.username} | hide | {/*numComments*/}{" "}
+          {points} Pts by {posterName} | hide | {/*numComments*/}{" "}
           <Link href="/comments">
             <a>comments</a>
           </Link>
@@ -77,14 +73,13 @@ function NewsPostLayout(props) {
         </p>
       )}
       <p>
-        {/*{points} Pts */}By {posterName.username} {/*| hide*/} |{" "}
-        {/*numComments*/}{" "}
+        {/*{points} Pts */}By {posterName} {/*| hide*/} | {/*numComments*/}{" "}
         <Link href={`/posts/${id}`}>
           <a>comments</a>
         </Link>
         <span> | {postDate} </span>
       </p>
-      {session.user.name === posterName.username ? (
+      {session.user.name === posterName ? (
         <form
           onSubmit={function () {
             if (confirm("Delete Post Permanently?")) {

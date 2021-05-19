@@ -1,31 +1,20 @@
-import React, { useState } from "react";
-import { Dhelper } from "../utils/dPostUtils";
+import React, { useState, useEffect } from "react";
 
 export default function Comment(props) {
   const allComments = props.allComments;
   const filteredComments = props.comment
     ? allComments.filter((c) => c.parent_comment_id === props.comment.id)
     : "";
-  console.log("props:", props);
-  console.log("filteredComments:", filteredComments);
-  console.log("allComments prop", allComments);
+  //console.log("props:", props);
+  //console.log("filteredComments:", filteredComments);
+  //console.log("allComments prop", allComments);
 
-  //const [propsChecker, setPropsChecker] = useState(function () {
-  //if (props.comment) {
-  //return true;
-  //} else {
-  //return false;
-  //}
-  //});
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState(props.comment);
+  const [user, setUser] = useState(props.comment.name);
   const [childComments, setchildComments] = useState(filteredComments);
-  console.log("childComments of commentLayout", childComments);
-
-  //childComments = () => {
-  //const { comment, allComments } = props;
-  //return allComments.filter((c) => c.parent_comment_id === comment.id);
-  //};
+  //console.log("childComments of commentLayout", childComments);
+  //console.log("user", user);
 
   const handleInputChange = (e) => {
     const target = e.target;
@@ -57,7 +46,7 @@ export default function Comment(props) {
         marginBottom: "10px",
       }}
     >
-      <b>userId:{props.comment.user_id}</b>
+      <b>userId:{user}</b>
       <p>
         comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
       </p>

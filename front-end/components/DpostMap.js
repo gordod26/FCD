@@ -21,6 +21,8 @@ function DpostMap(props) {
                   poster={post.user_id}
                   created={post.created_at}
                   id={post.id}
+                  name={post.name}
+                  image={post.image}
                 />
               </li>
             );

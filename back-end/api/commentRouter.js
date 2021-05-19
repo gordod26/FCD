@@ -34,8 +34,19 @@ commentRouter.get("/comment/:commentid", (req, res, next) => {
 });
 
 //GET Comments by dpost_id
+//commentRouter.get("/dpost/:dpost_id", (req, res, next) => {
+//const sql = `SELECT cmmts.* FROM cmmts WHERE dpost_id = ${req.params.dpost_id}`;
+//db.query(sql, (err, r) => {
+//if (err) {
+//next(err);
+//} else {
+//res.status(200).json(r.rows);
+//}
+//});
+//});
+//GET Comments by dpost_id with INNERJOIN
 commentRouter.get("/dpost/:dpost_id", (req, res, next) => {
-  const sql = `SELECT * FROM cmmts WHERE dpost_id = ${req.params.dpost_id}`;
+  const sql = `SELECT cmmts.*, name, email, image FROM cmmts,users WHERE cmmts.user_id = users.id AND cmmts.dpost_id = ${req.params.dpost_id}`;
   db.query(sql, (err, r) => {
     if (err) {
       next(err);
