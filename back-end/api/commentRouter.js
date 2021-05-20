@@ -97,7 +97,7 @@ commentRouter.post("/reply/:parentCommentId", (req, res, next) => {
   const user_id = req.body.userId,
     dpost_id = req.body.dpostId,
     parent_comment_id = req.params.parentCommentId,
-    cmmt = req.body.cmmt;
+    cmmt = req.body.reply;
 
   if (!user_id || !dpost_id || !parent_comment_id || !cmmt) {
     return res.sendStatus(400);
@@ -108,10 +108,15 @@ commentRouter.post("/reply/:parentCommentId", (req, res, next) => {
       next(err);
     } else {
       const lastId = r.rows[0].id;
-      const newPath = req.body.parentPath;
-      db.query(`INSERT INTO cmmts (path) VALUES($1)`, [
-        `${req.body.parentPath}`,
-      ]);
+      const newPath = `${req.body.parentPath}.${lastId}`;
+      db.query(`UPDATE cmmts SET path=$1 WHERE id=$2`, [newPath, lastId]),
+        (err, r) => {
+          if (err) {
+            next(err);
+          } else {
+            res.status(201).json(r.rows[0]);
+          }
+        };
     }
   });
 });

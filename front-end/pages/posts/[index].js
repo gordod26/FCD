@@ -58,6 +58,8 @@ export default function Post({ post, cmmts }) {
     setCommentBox(false);
     cmmtHelper.createCmmt(comment);
     console.log(comment);
+    e.preventDefault();
+    window.location.reload();
     setComment({
       ...comment,
       cmmt: "",
@@ -95,9 +97,9 @@ export default function Post({ post, cmmts }) {
             </div>
           ) : (
             <form
-              onSubmit={function () {
+              onSubmit={function (e) {
                 if (confirm("Submit Comment?")) {
-                  handleSubmit();
+                  handleSubmit(e);
                 }
               }}
             >
@@ -112,7 +114,7 @@ export default function Post({ post, cmmts }) {
             </form>
           )}
         </div>
-        <CommentMap cmmts={c} />
+        <CommentMap post={post} cmmts={c} />
       </div>
     </Layout>
   );
