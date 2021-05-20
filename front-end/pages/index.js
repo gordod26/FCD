@@ -28,10 +28,9 @@ export async function getStaticProps() {
   //};
 }
 export default function Home({ post }) {
-  console.log({ post });
   //Authentication session w/ next-auth
   const [posts, setPosts] = useState(post);
-  console.log("cmonnnnnnnnn", posts);
+  console.log("Dposts returned to /pages/index", posts);
 
   //useEffect(() => {
   //Dhelper.getDposts(setPosts);

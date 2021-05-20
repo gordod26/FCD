@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/client";
 import { getidbyemail } from "../utils/helpers";
 import { cmmtHelper } from "../utils/cmmtHelper";
 
+// This is the child component of CommentMap. it handles nesting and comment replies as well
 export default function Comment(props) {
+  //console.log("props:", props.session);
   const allComments = props.allComments;
+  //console.log("allComments prop", allComments);
+
+  //nst filteredComments : ternary operator prevents error when recursive component
+  //                       gets to end of comment tree.
   const filteredComments = props.comment
     ? allComments.filter((c) => c.parent_comment_id === props.comment.id)
     : "";
-  //console.log("props:", props.comment.dpost_id);
   //console.log("filteredComments:", filteredComments);
-  //console.log("allComments prop", allComments);
 
-  const [session, loading] = useSession();
+  // Component States
+  //     commentBox  is a switch for the comments textarea
   const [commentBox, setCommentBox] = useState(false);
-  const [comment, setComment] = useState(props.comment);
-  const [user, setUser] = useState(props.comment.name);
+  //     childComments  array of nested replies parent comment for recursion.
   const [childComments, setchildComments] = useState(filteredComments);
+  //     reply  post object for replying
   const [reply, setReply] = useState({
     userId: "",
     dpostId: props.comment.dpost_id,
@@ -24,6 +28,13 @@ export default function Comment(props) {
     parentPath: props.comment.path,
     reply: "",
   });
+
+  useEffect(() => {
+    if (props.session) {
+      getidbyemail(props.session.user.email, reply, setReply);
+    }
+  }, [props.session]);
+
   //console.log("childComments of commentLayout", childComments);
   //console.log("user", user);
 
@@ -51,14 +62,6 @@ export default function Comment(props) {
     });
   };
 
-  useEffect(() => {
-    //SetTimeout to allow session to load
-    setTimeout(() => {
-      getidbyemail(session.user.email, reply, setReply);
-      console.log("session", session.user.email);
-    }, 5000);
-  }, []);
-
   return (
     <div
       style={{
@@ -67,7 +70,7 @@ export default function Comment(props) {
         marginBottom: "10px",
       }}
     >
-      <b>userId:{user}</b>
+      <b>userId:{props.comment.name}</b>
       <p>
         comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
       </p>
@@ -101,7 +104,11 @@ export default function Comment(props) {
         </form>
       )}
       {childComments.map((c) => (
-        <Comment comment={c} allComments={props.allComments} />
+        <Comment
+          key={childComments.indexOf(c)}
+          comment={c}
+          allComments={props.allComments}
+        />
       ))}
     </div>
   );

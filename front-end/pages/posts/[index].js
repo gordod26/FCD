@@ -1,12 +1,10 @@
-import { useRouter } from "next/router";
 import { cmmtHelper } from "../../utils/cmmtHelper";
 import CommentMap from "../../components/CommentMap";
-import CommentLayout from "../../components/CommentLayout";
 import Layout from "../../components/Layout";
 import axios from "axios";
-import Link from "next/link";
-import { useState } from "react";
-import Dhelper from "../../utils/dPostUtils";
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import { useSession } from "next-auth/client";
 
 export async function getStaticPaths() {
   const paths = await axios
@@ -41,18 +39,20 @@ export async function getStaticProps(context) {
 }
 
 export default function Post({ post, cmmts }) {
+  const [session, loading] = useSession();
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState({
     userId: post.dpost[0].user_id,
     dpostId: post.dpost[0].id,
     path: `${post.dpost[0].id}`,
   });
-  console.log("comment state:", comment);
-  console.log("post prop:", post.dpost[0].id);
+  console.log("SESSIONPROPS:", session);
+  //console.log("comment state:", comment);
+  //console.log("post prop:", post.dpost[0].id);
 
   const p = post.dpost[0];
   const c = cmmts;
-  console.log("comment layout data", c);
+  //console.log("comment layout data", c);
 
   const handleSubmit = (e) => {
     setCommentBox(false);
@@ -78,44 +78,50 @@ export default function Post({ post, cmmts }) {
   };
 
   return (
-    <Layout>
-      <div>
-        <h1>{p.title}</h1>
-        <p>{p.text ? p.text : p.url}</p>
-        <p>{p.created_at.slice(0, p.created_at.indexOf("T"))}</p>
+    <>
+      <Head>
+        {/*metadata*/}
+        <title>Fellowship Of Christion Developers</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Layout>
         <div>
-          <h3>be the first to comment!</h3>
-          {!commentBox ? (
-            <div>
-              <button
-                onClick={function () {
-                  setCommentBox(true);
+          <h1>{p.title}</h1>
+          <p>{p.text ? p.text : p.url}</p>
+          <p>{p.created_at.slice(0, p.created_at.indexOf("T"))}</p>
+          <div>
+            {!commentBox ? (
+              <div>
+                <button
+                  onClick={function () {
+                    setCommentBox(true);
+                  }}
+                >
+                  Comment
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={function (e) {
+                  if (confirm("Submit Comment?")) {
+                    handleSubmit(e);
+                  }
                 }}
               >
-                Comment
-              </button>
-            </div>
-          ) : (
-            <form
-              onSubmit={function (e) {
-                if (confirm("Submit Comment?")) {
-                  handleSubmit(e);
-                }
-              }}
-            >
-              <textarea
-                id="cmmt"
-                name="cmmt"
-                value={comment.text}
-                onChange={handleInputChange}
-              />
-              <br />
-              <input type="submit" value="Submit" />
-            </form>
-          )}
+                <textarea
+                  id="cmmt"
+                  name="cmmt"
+                  value={comment.text}
+                  onChange={handleInputChange}
+                />
+                <br />
+                <input type="submit" value="Submit" />
+              </form>
+            )}
+          </div>
+          <CommentMap post={post} cmmts={c} session={session} />
         </div>
-        <CommentMap post={post} cmmts={c} />
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }

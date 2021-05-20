@@ -2,15 +2,18 @@ const axios = require("axios");
 const baseUrl = "http://localhost:5000/api";
 
 export const getidbyemail = (email, state, setState) => {
-  axios
-    .get(`${baseUrl}/helper/getidbyemail/${email}`)
-    .then(function (response) {
-      console.log(`EMAIL`, email, ` // RETURNS ID,`, response.data);
-      return setState({ ...state, userId: response.data });
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  if (!email) {
+  } else {
+    axios
+      .get(`${baseUrl}/helper/getidbyemail/${email}`)
+      .then(function (response) {
+        console.log(`EMAIL`, email, ` // RETURNS ID,`, response.data);
+        return setState({ ...state, userId: response.data });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 };
 
 export const getnamebyid = (id, state, setState) => {
