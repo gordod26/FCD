@@ -18,7 +18,7 @@ function DpostMap(props) {
                   session={props.session}
                   title={post.title}
                   url={post.url}
-                  points={post.points}
+                  votes={post.votes}
                   poster={post.user_id}
                   created={post.created_at}
                   id={post.id}

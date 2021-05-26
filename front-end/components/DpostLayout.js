@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
-import { postVote, getVote, deleteVote } from "../utils/voteHelpers";
+import {
+  postVote,
+  getVote,
+  deleteVote,
+  updateVoteCount,
+} from "../utils/voteHelpers";
 
 export default NewsPostLayout;
 
@@ -12,6 +17,7 @@ function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   const [posterName, setPosterName] = useState(props.name);
   const [voteState, setVoteState] = useState({
+    voteDisplay: props.votes,
     postId: props.id,
     userId: "",
   });
@@ -20,7 +26,7 @@ function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   const title = props.title;
   const url = props.url;
-  const points = props.points;
+  let votes = props.votes;
   const id = props.id;
   var postDate = props.created.slice(0, props.created.indexOf("T"));
   /////////////////////////////////////////////////////////////////////////////
@@ -29,12 +35,21 @@ function NewsPostLayout(props) {
   const handleVote = () => {
     if (voteState.didVote) {
       deleteVote(voteState.userId, voteState.postId);
-      setVoteState({ ...voteState, didVote: !voteState.didVote });
+      setVoteState({
+        ...voteState,
+        didVote: !voteState.didVote,
+        voteDisplay: voteState.voteDisplay - 1,
+      });
     } else {
       postVote(voteState.userId, voteState.postId);
-      setVoteState({ ...voteState, didVote: !voteState.didVote });
+      setVoteState({
+        ...voteState,
+        didVote: !voteState.didVote,
+        voteDisplay: voteState.voteDisplay + 1,
+      });
     }
   };
+
   /////////////////////////////////////////////////////////////////////////////
   const handleDelete = () => {
     Dhelper.deleteDpost(id);
@@ -50,16 +65,16 @@ function NewsPostLayout(props) {
       getidbyemail(props.session.user.email, voteState, setVoteState);
     }
   }, [props.session]);
+  //checks if user voted on this post yet sets didVote to t/f?/////////////////
+  useEffect(() => {
+    if (voteState.userId) {
+      getVote(voteState.userId, voteState.postId, voteState, setVoteState);
+    }
+  }, [voteState.userId]);
   /////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
-    setTimeout(() => {
-      getVote(voteState.userId, voteState.postId, voteState, setVoteState);
-    }, 1000);
-    //else {
-    // setVoteState({ ...voteState, didVote: false });
-    //console.log("useEffect voteState", voteState);
-    //}
-  }, [voteState.userId]);
+    updateVoteCount(props.id);
+  }, []);
 
   if (!props.session) {
     ///////////////////////////////////////////////////////////////////////////
@@ -78,7 +93,7 @@ function NewsPostLayout(props) {
           </sub>
         </p>
         <p>
-          {points} Pts by {posterName} | hide | {/*numComments*/}{" "}
+          {voteState.voteDisplay} Pts by {posterName} | hide | {/*numComments*/}{" "}
           <Link href="/comments">
             <a>comments</a>
           </Link>
@@ -120,7 +135,8 @@ function NewsPostLayout(props) {
         </p>
       )}
       <p>
-        {/*{points} Pts */}By {posterName} {/*| hide*/} | {/*numComments*/}{" "}
+        {voteState.voteDisplay} Pts By {posterName} {/*| hide*/} |{" "}
+        {/*numComments*/}{" "}
         <Link href={`/posts/${id}`}>
           <a>comments</a>
         </Link>

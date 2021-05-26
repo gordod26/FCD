@@ -76,11 +76,12 @@ dpostRouter.get("/:dpostId", (req, res, next) => {
     }
   );
 });
-
-// POST: SEND 400 BAD REQUEST if no user_id, title, or both/none url and text
+///////////////////////////////////////////////////////////////////////////////
+// POST: SEND 400 BAD REQUEST if no user_id, title, or both/none url and text//
+///////////////////////////////////////////////////////////////////////////////
 dpostRouter.post("/", (req, res, next) => {
   const sql = `INSERT INTO Dposts (user_id, title, url, text)
-                VALUES ($1, $2, $3, $4)`;
+                VALUES ($1, $2, $3, $4) RETURNING id`;
   const userId = req.body.userId,
     title = req.body.title,
     url = req.body.url ? req.body.url : "",
@@ -88,15 +89,18 @@ dpostRouter.post("/", (req, res, next) => {
 
   if (!userId || !title || (url && text) || (!url && !text)) {
     return res.sendStatus(400);
+  } else {
+    const values = [userId, title, url, text];
+    db.query(sql, values, (err, r) => {
+      if (err) {
+        next(err);
+      } else {
+        const lastId = r.rows[0].id;
+        db.query(`INSERT INTO votes VALUES (${userId}, ${lastId})`);
+        res.status(201).json({ dpost: r.rows });
+      }
+    });
   }
-  const values = [userId, title, url, text];
-  db.query(sql, values, (err, response) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(201).json({ dpost: response.rows });
-    }
-  });
 });
 
 dpostRouter.put("/:dpostId", (req, res, next) => {

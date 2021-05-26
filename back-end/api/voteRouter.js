@@ -4,7 +4,7 @@ const db = require("../db");
 const voteRouter = express.Router();
 
 ///////////////////////////////////////////////////////////////////////////////
-//GET REQUEST/////////////////////////////
+//GET REQUEST PREVENTS DOUBLE VOTE/////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 voteRouter.get("/:userId/:postId", (req, res, next) => {
   db.query(
@@ -40,21 +40,71 @@ voteRouter.post("/", (req, res, next) => {
     }
   });
 });
+///////////////////////////////////////////////////////////////////////////////
+// PUT: UPDATES DPOST VOTES COLUMN /////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+voteRouter.get("/:postId", (req, res, next) => {
+  const postId = req.params.postId;
+  db.query(
+    `SELECT post_id, count(*) AS vote_count FROM votes 
+    WHERE post_id = ${postId}
+    GROUP BY post_id`,
+    (err, r) => {
+      if (err) {
+        next(err);
+      } else {
+        if (r.rows) {
+          const postLikes = parseInt(r.rows[0].vote_count);
+          db.query(
+            `UPDATE dposts SET votes = $1 WHERE id = $2`,
+            [postLikes, postId],
+            (err, r) => {
+              if (err) {
+                next(err);
+              } else {
+                console.log(`dpost(${postId}) put votes(${postLikes})`);
+                res.sendStatus(200);
+              }
+            }
+          );
+        }
+      }
+    }
+  );
+});
 
 ///////////////////////////////////////////////////////////////////////////////
 //DELETE VOTE//////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 voteRouter.delete("/", (req, res, next) => {
-  const sql = "DELETE FROM votes WHERE user_id = $1 AND post_id = $2";
+  const deletesql = "DELETE FROM votes WHERE user_id = $1 AND post_id = $2";
+  const checksql =
+    "SELECT post_id, count(*) as count FROM votes WHERE post_id = $1 GROUP BY post_id";
   const userId = req.body.userId;
   const postId = req.body.postId;
-  db.query(sql, [userId, postId], (err) => {
+  db.query(checksql, [postId], (err, r) => {
     if (err) {
       next(err);
-    } else {
-      return res.sendStatus(204);
+    } else if (parseInt(r.rows[0].count) <= 1) {
+      res.sendStatus(404);
+    } else if (parseInt(r.rows[0].count) > 1) {
+      console.log(parseInt(r.rows[0].count));
+      db.query(deletesql, [userId, postId], (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          return res.sendStatus(204);
+        }
+      });
     }
   });
+  //db.query(deletesql, [userId, postId], (err) => {
+  //if (err) {
+  //next(err);
+  //} else {
+  //return res.sendStatus(204);
+  //}
+  //});
 });
 
 module.exports = voteRouter;
