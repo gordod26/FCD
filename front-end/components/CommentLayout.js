@@ -16,8 +16,11 @@ export default function Comment(props) {
   //console.log("filteredComments:", filteredComments);
 
   // Component States
-  //     commentBox  is a switch for the comments textarea
-  const [commentBox, setCommentBox] = useState(false);
+  //     textBoxToggle  is a switch for the comments textarea
+  const [textBoxToggle, setTextBoxToggle] = useState({
+    replyBox: false,
+    editBox: false,
+  });
   //     childComments  array of nested replies parent comment for recursion.
   const [childComments, setchildComments] = useState(filteredComments);
   //     reply  post object for replying
@@ -51,7 +54,7 @@ export default function Comment(props) {
     });
   };
   const handleSubmit = (e) => {
-    setCommentBox(false);
+    setTextBoxToggle({ ...textBoxToggle, replyBox: false });
     cmmtHelper.postReply(reply);
     console.log(reply);
     e.preventDefault();
@@ -61,6 +64,8 @@ export default function Comment(props) {
       reply: "",
     });
   };
+
+  const handleEdit = (e) => {};
 
   return (
     <div
@@ -75,11 +80,11 @@ export default function Comment(props) {
         comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
       </p>
 
-      {!commentBox ? (
+      {!textBoxToggle.replyBox ? (
         <div>
           <button
             onClick={function () {
-              setCommentBox(true);
+              setTextBoxToggle({ ...textBoxToggle, replyBox: true });
             }}
           >
             Reply
@@ -96,12 +101,46 @@ export default function Comment(props) {
           <textarea
             id="reply"
             name="reply"
-            value={reply.text}
+            defaultValue={reply.text}
             onChange={handleInputChange}
           />
           <br />
           <input type="submit" value="Submit" />
         </form>
+      )}
+      {/* EDIT BUTTON*/}
+      {reply.userId === props.comment.user_id ? (
+        !textBoxToggle.editBox ? (
+          <button
+            onClick={() => {
+              setTextBoxToggle(
+                { ...textBoxToggle, editBox: true },
+                setReply({ ...reply, cmmt: props.comment.cmmt })
+              );
+            }}
+          >
+            Edit Post
+          </button>
+        ) : (
+          <form
+            onSubmit={function (e) {
+              if (confirm("Submit Edit?")) {
+                handleSubmit(e);
+              }
+            }}
+          >
+            <textarea
+              id="edit"
+              name="reply"
+              value={reply.cmmt}
+              onChange={handleInputChange}
+            />
+            <br />
+            <input type="submit" value="Submit" />
+          </form>
+        )
+      ) : (
+        ""
       )}
       {childComments.map((c) => (
         <Comment

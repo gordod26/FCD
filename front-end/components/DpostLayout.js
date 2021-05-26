@@ -1,35 +1,76 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/client";
 import Dhelper from "../utils/dPostUtils";
+import { getidbyemail } from "../utils/helpers";
+import { postVote, getVote, deleteVote } from "../utils/voteHelpers";
 
 export default NewsPostLayout;
 
 function NewsPostLayout(props) {
-  const [session, loading] = useSession();
+  /////////////////////////////////////////////////////////////////////////////
+  // STATES ///////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   const [posterName, setPosterName] = useState(props.name);
-
+  const [voteState, setVoteState] = useState({
+    postId: props.id,
+    userId: "",
+  });
+  /////////////////////////////////////////////////////////////////////////////
+  // VARS /////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   const title = props.title;
   const url = props.url;
-  const text = props.text;
   const points = props.points;
-  const posterId = props.poster;
   const id = props.id;
   var postDate = props.created.slice(0, props.created.indexOf("T"));
+  /////////////////////////////////////////////////////////////////////////////
+  // HANDLERS /////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  const handleVote = () => {
+    if (voteState.didVote) {
+      deleteVote(voteState.userId, voteState.postId);
+      setVoteState({ ...voteState, didVote: !voteState.didVote });
+    } else {
+      postVote(voteState.userId, voteState.postId);
+      setVoteState({ ...voteState, didVote: !voteState.didVote });
+    }
+  };
+  /////////////////////////////////////////////////////////////////////////////
   const handleDelete = () => {
     Dhelper.deleteDpost(id);
   };
-
-  //  console.log("DpostLayout posterid:", posterId);
+  /////////////////////////////////////////////////////////////////////////////
+  // console.log("DpostLayout posterid:", posterId);
   // console.log(props);
+  /////////////////////////////////////////////////////////////////////////////
+  // USEEFFECT HOOK ///////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    if (props.session) {
+      getidbyemail(props.session.user.email, voteState, setVoteState);
+    }
+  }, [props.session]);
+  /////////////////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    setTimeout(() => {
+      getVote(voteState.userId, voteState.postId, voteState, setVoteState);
+    }, 1000);
+    //else {
+    // setVoteState({ ...voteState, didVote: false });
+    //console.log("useEffect voteState", voteState);
+    //}
+  }, [voteState.userId]);
 
-  if (!session) {
+  if (!props.session) {
+    ///////////////////////////////////////////////////////////////////////////
+    // LOGGED OUT RETURN ...///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     return (
       <div style={{ border: "1px solid grey" }}>
         {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
       <span>{postInfo.rank} </span>
       */}
-        <button>Upvote</button>
+        <button>+1</button>
         <p>
           <a href={url}>{title} </a>
           <sub>
@@ -45,24 +86,29 @@ function NewsPostLayout(props) {
       </div>
     );
   }
-  //LOGS VARIABLES FOR RENDERTRASH FUNCTION
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////// LOGGED IN RETURN ...///////////////////////
+  // * DIFFERENCES
+  // - Upvote button
+  // * Trash button to post if session user also posted message
+  //
+  //TESTS RENDERTRASH()
   //console.log(session.user.name);
   //console.log(posterName);
-
-  //adds trash button to post if session user also posted message
-
+  ///////////////////////////////////////////////////////////////////
   return (
     <div style={{ border: "1px solid grey" }}>
       {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
       <span>{postInfo.rank} </span>
       */}
-      {/*<button>Upvote</button>*/}
+      <button onClick={handleVote}>+1</button>
       {url ? (
         <p>
           <a href={url}>{title} </a>
           <sub>
             <a href={url}>({url})</a>
           </sub>
+          <sub>{id}</sub>
         </p>
       ) : (
         <p>
@@ -70,6 +116,7 @@ function NewsPostLayout(props) {
             <a>{title} </a>
           </Link>
           <sub>(text)</sub>
+          <sub>{id}</sub>
         </p>
       )}
       <p>
@@ -79,7 +126,7 @@ function NewsPostLayout(props) {
         </Link>
         <span> | {postDate} </span>
       </p>
-      {session.user.name === posterName ? (
+      {props.session.user.name === posterName ? (
         <form
           onSubmit={function () {
             if (confirm("Delete Post Permanently?")) {
@@ -95,3 +142,6 @@ function NewsPostLayout(props) {
     </div>
   );
 }
+///////////////////////////////////////////////////////////////////
+//////////////////////// END ///////////////////////
+///////////////////////////////////////////////////////////////////

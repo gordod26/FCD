@@ -8,6 +8,7 @@ import DpostLayout from "../components/DpostLayout";
 import DpostMap from "../components/DpostMap";
 import Dhelper from "../utils/dPostUtils";
 import axios from "axios";
+import { useSession } from "next-auth/client";
 
 export async function getStaticProps() {
   const res = await fetch("http://localhost:5000/api/dpost/").then(function (
@@ -30,7 +31,8 @@ export async function getStaticProps() {
 export default function Home({ post }) {
   //Authentication session w/ next-auth
   const [posts, setPosts] = useState(post);
-  console.log("Dposts returned to /pages/index", posts);
+  const [session, loading] = useSession();
+  //console.log("Dposts returned to /pages/index", posts);
 
   //useEffect(() => {
   //Dhelper.getDposts(setPosts);
@@ -49,7 +51,7 @@ export default function Home({ post }) {
       </Head>
       <Layout>
         <h1>Discussion</h1>
-        <DpostMap posts={posts} />
+        <DpostMap posts={posts} session={session} />
       </Layout>
     </>
   );

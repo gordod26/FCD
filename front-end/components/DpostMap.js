@@ -15,6 +15,7 @@ function DpostMap(props) {
             return (
               <li key={post.id}>
                 <DpostLayout
+                  session={props.session}
                   title={post.title}
                   url={post.url}
                   points={post.points}
