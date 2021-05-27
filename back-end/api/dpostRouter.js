@@ -107,17 +107,18 @@ dpostRouter.get("/:dpostId", (req, res, next) => {
 // POST: SEND 400 BAD REQUEST if no user_id, title, or both/none url and text//
 ///////////////////////////////////////////////////////////////////////////////
 dpostRouter.post("/", (req, res, next) => {
-  const sql = `INSERT INTO Dposts (user_id, title, url, text)
-                VALUES ($1, $2, $3, $4) RETURNING id`;
+  const sql = `INSERT INTO Dposts (user_id, title, url, text, post_type)
+                VALUES ($1, $2, $3, $4, $5) RETURNING id`;
   const userId = req.body.userId,
+    postType = req.body.postType,
     title = req.body.title,
     url = req.body.url ? req.body.url : "",
     text = req.body.text ? req.body.text : "";
 
-  if (!userId || !title || (url && text) || (!url && !text)) {
+  if (!userId || !title || (url && text) || (!url && !text) || !postType) {
     return res.sendStatus(400);
   } else {
-    const values = [userId, title, url, text];
+    const values = [userId, title, url, text, postType];
     db.query(sql, values, (err, r) => {
       if (err) {
         next(err);

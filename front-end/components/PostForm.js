@@ -8,6 +8,7 @@ export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
   const [session, loading] = useSession();
   const [post, setPost] = useState({
+    postType: "",
     userId: "",
     title: "",
     url: "",
@@ -23,6 +24,11 @@ export default function PostForm() {
       ...post,
       [name]: value,
     });
+  };
+
+  const handleRadioChange = (e) => {
+    setPost({ ...post, postType: e.target.value });
+    console.log(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -51,6 +57,25 @@ export default function PostForm() {
           }
         }}
       >
+        <div onChange={handleRadioChange}>
+          <input
+            type="radio"
+            id="discussion"
+            name="postType"
+            value="discussion"
+            required
+          />
+          <label for="discussion">Discussion</label>
+          <br />
+          <input
+            type="radio"
+            id="project"
+            name="postType"
+            value="project"
+            required
+          />
+          <label for="project">Project</label>
+        </div>
         <label htmlFor="title">Title </label>
         <input
           type="title"
@@ -58,6 +83,7 @@ export default function PostForm() {
           name="title"
           value={post.title}
           onChange={handleInputChange}
+          required
         />
         <br />
         <label htmlFor="url">URL </label>
