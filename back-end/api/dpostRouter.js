@@ -21,21 +21,47 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
   });
 });
 
-//GET ALL DPOSTS
-dpostRouter.get("/", (req, res, next) => {
-  db.query(
-    `SELECT dposts.*, name, email, image FROM Dposts, users WHERE dposts.user_id = users.id`,
-    (err, r) => {
-      if (err) {
-        next(err);
-      } else {
-        res.status(200).json(r.rows);
+///////////////////////////////////////////////////////////////////////////////
+// GET DPOSTS SORTED BY NEW/VOTES //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+dpostRouter.get("/sort/:sortMethod", (req, res, next) => {
+  if (req.params.sortMethod === "new") {
+    db.query(
+      `SELECT dposts.*, name, email, image 
+     FROM Dposts, users 
+     WHERE dposts.user_id = users.id
+      ORDER BY dposts.created_at DESC`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          res.status(200).json(r.rows);
+          console.log("sort NEW");
+        }
       }
-    }
-  );
+    );
+  } else if (req.params.sortMethod === "votes") {
+    db.query(
+      `SELECT dposts.*, name, email, image 
+     FROM Dposts, users 
+     WHERE dposts.user_id = users.id
+      ORDER BY dposts.votes DESC`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          res.status(200).json(r.rows);
+          console.log("sort VOTES");
+        }
+      }
+    );
+  }
 });
 
-// GET ALL DPOST IDs for GETSTATICPATHS
+///////////////////////////////////////////////////////////////////////////////
+// GET ALL DPOST IDs for GETSTATICPATHS in ////////////////////////////////////
+// ~./fcd/front-end/pages/posts/[index] ///////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 dpostRouter.get("/dpostids", (req, res, next) => {
   db.query(`SELECT id FROM Dposts`, (err, r) => {
     if (err) {
@@ -49,8 +75,9 @@ dpostRouter.get("/dpostids", (req, res, next) => {
     }
   });
 });
-
-//GET DPOST BY USERID /userposts/:userId
+///////////////////////////////////////////////////////////////////////////////
+//GET DPOST BY USERID /userposts/:userId to a users posts their own posts//////
+///////////////////////////////////////////////////////////////////////////////
 dpostRouter.get("/userposts/:userId", (req, res, next) => {
   db.query(
     `SELECT * FROM Dposts WHERE user_id = ${req.params.userId}`,

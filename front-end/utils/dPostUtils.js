@@ -1,8 +1,25 @@
 const axios = require("axios");
 const Dhelper = {};
 const baseUrl = "http://localhost:5000/api";
+///////////////////////////////////////////////////////////////////////////////
+//DHelper.getDposts REPLACED BY GETSORTEDPOSTS/////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//Dhelper.getDposts = (setState) => {
+//const url = `${baseUrl}/dpost`;
+//axios
+//.get(url)
+//.then(function (response) {
+//console.log("getDposts response data //", response.data);
+//return setState(response.data);
+//})
+//.catch(function (error) {
+//console.log(error);
+//});
+//};
 
-//DHelper.getDposts
+///////////////////////////////////////////////////////////////////////////////
+//DHelper.getDposts ///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 Dhelper.getDposts = (setState) => {
   const url = `${baseUrl}/dpost`;
   axios
@@ -15,6 +32,23 @@ Dhelper.getDposts = (setState) => {
       console.log(error);
     });
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// CHANGE DPOSTs by SORTMETHOD ////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Dhelper.getSortedPosts = (sortMethod, setState) => {
+  const url = `${baseUrl}/dpost/sort/${sortMethod}`;
+  axios
+    .get(url)
+    .then(function (response) {
+      console.log("getDposts response data //", response.data);
+      return setState(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 //DHelper.getUsersPosts
 Dhelper.getUserPosts = (id, setState) => {
   const url = `${baseUrl}/dpost/userposts/${id}`;
@@ -34,6 +68,7 @@ Dhelper.createDpost = (post) => {
   const url = `${baseUrl}/dpost`;
   axios
     .post(url, {
+      postType: post.postType,
       userId: post.userId,
       title: post.title,
       url: post.url,
