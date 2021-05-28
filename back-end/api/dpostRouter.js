@@ -24,12 +24,13 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
 ///////////////////////////////////////////////////////////////////////////////
 // GET DPOSTS SORTED BY NEW/VOTES //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-dpostRouter.get("/sort/:sortMethod", (req, res, next) => {
-  if (req.params.sortMethod === "new") {
+dpostRouter.get("/sort/:sortMethod/:sortGroup", (req, res, next) => {
+  const sortGroup = req.params.sortGroup;
+  if (req.params.sortMethod === "new" && sortGroup === "discussion") {
     db.query(
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
-     WHERE dposts.user_id = users.id
+     WHERE dposts.user_id = users.id AND dposts.post_type = 'discussion'
       ORDER BY dposts.created_at DESC`,
       (err, r) => {
         if (err) {
@@ -40,11 +41,11 @@ dpostRouter.get("/sort/:sortMethod", (req, res, next) => {
         }
       }
     );
-  } else if (req.params.sortMethod === "votes") {
+  } else if (req.params.sortMethod === "votes" && sortGroup === "discussion") {
     db.query(
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
-     WHERE dposts.user_id = users.id
+     WHERE dposts.user_id = users.id AND post_type = 'discussion'
       ORDER BY dposts.votes DESC`,
       (err, r) => {
         if (err) {
@@ -52,6 +53,36 @@ dpostRouter.get("/sort/:sortMethod", (req, res, next) => {
         } else {
           res.status(200).json(r.rows);
           console.log("sort VOTES");
+        }
+      }
+    );
+  } else if (req.params.sortMethod === "new" && sortGroup === "project") {
+    db.query(
+      `SELECT dposts.*, name, email, image 
+     FROM Dposts, users 
+     WHERE dposts.user_id = users.id AND dposts.post_type = 'project'
+      ORDER BY dposts.created_at DESC`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          res.status(200).json(r.rows);
+          console.log("sort NEW");
+        }
+      }
+    );
+  } else if (req.params.sortMethod === "votes" && sortGroup === "project") {
+    db.query(
+      `SELECT dposts.*, name, email, image 
+     FROM Dposts, users 
+     WHERE dposts.user_id = users.id AND dposts.post_type = 'project'
+      ORDER BY dposts.votes DESC`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          res.status(200).json(r.rows);
+          console.log("sort NEW");
         }
       }
     );
@@ -80,7 +111,10 @@ dpostRouter.get("/dpostids", (req, res, next) => {
 ///////////////////////////////////////////////////////////////////////////////
 dpostRouter.get("/userposts/:userId", (req, res, next) => {
   db.query(
-    `SELECT * FROM Dposts WHERE user_id = ${req.params.userId}`,
+    `SELECT dposts.*, name, email, image 
+     FROM Dposts, users
+     WHERE dposts.user_id = users.id AND user_id = ${req.params.userId}
+     ORDER BY dposts.created_at DESC`,
     (err, r) => {
       if (err) {
         next(err);

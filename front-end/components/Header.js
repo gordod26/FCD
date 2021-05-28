@@ -20,7 +20,7 @@ export default function Header() {
           </li>
           <li>
             <Link href="/openSource">
-              <a>OpenSource</a>
+              <a>Projects</a>
             </Link>
           </li>
           <li>

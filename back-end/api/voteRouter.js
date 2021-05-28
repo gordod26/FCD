@@ -86,7 +86,7 @@ voteRouter.delete("/", (req, res, next) => {
     if (err) {
       next(err);
     } else if (parseInt(r.rows[0].count) <= 1) {
-      res.sendStatus(404);
+      return res.status(200).json("can't remove vote if only 1 vote exists");
     } else if (parseInt(r.rows[0].count) > 1) {
       console.log(parseInt(r.rows[0].count));
       db.query(deletesql, [userId, postId], (err, r) => {

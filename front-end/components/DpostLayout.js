@@ -20,20 +20,23 @@ function NewsPostLayout(props) {
     voteDisplay: props.votes,
     postId: props.id,
     userId: "",
+    didVote: "",
   });
+  //console.log("SESSION TEST", props.session);
   /////////////////////////////////////////////////////////////////////////////
   // VARS /////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   const title = props.title;
   const url = props.url;
-  let votes = props.votes;
   const id = props.id;
   var postDate = props.created.slice(0, props.created.indexOf("T"));
   /////////////////////////////////////////////////////////////////////////////
   // HANDLERS /////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   const handleVote = () => {
-    if (voteState.didVote) {
+    if (voteState.didVote && voteState.voteDisplay <= 1) {
+      return;
+    } else if (voteState.didVote) {
       deleteVote(voteState.userId, voteState.postId);
       setVoteState({
         ...voteState,
@@ -63,6 +66,7 @@ function NewsPostLayout(props) {
   useEffect(() => {
     if (props.session) {
       getidbyemail(props.session.user.email, voteState, setVoteState);
+      console.log("layout getemailbyid");
     }
   }, [props.session]);
   //checks if user voted on this post yet sets didVote to t/f?/////////////////
@@ -85,7 +89,7 @@ function NewsPostLayout(props) {
         {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
       <span>{postInfo.rank} </span>
       */}
-        <button>+1</button>
+        <button>{voteState.didVote ? "-1" : "+1"}</button>
         <p>
           <a href={url}>{title} </a>
           <sub>
@@ -116,7 +120,7 @@ function NewsPostLayout(props) {
       {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
       <span>{postInfo.rank} </span>
       */}
-      <button onClick={handleVote}>+1</button>
+      <button onClick={handleVote}>{voteState.didVote ? "-1" : "+1"}</button>
       {url ? (
         <p>
           <a href={url}>{title} </a>

@@ -36,8 +36,8 @@ Dhelper.getDposts = (setState) => {
 ///////////////////////////////////////////////////////////////////////////////
 // CHANGE DPOSTs by SORTMETHOD ////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-Dhelper.getSortedPosts = (sortMethod, setState) => {
-  const url = `${baseUrl}/dpost/sort/${sortMethod}`;
+Dhelper.getSortedPosts = (sortMethod, postType, setState) => {
+  const url = `${baseUrl}/dpost/sort/${sortMethod}/${postType}`;
   axios
     .get(url)
     .then(function (response) {

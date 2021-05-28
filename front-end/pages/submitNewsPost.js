@@ -8,10 +8,22 @@ import { getidbyemail } from "../utils/helpers";
 import Dhelper from "../utils/dPostUtils";
 import DpostMap from "../components/DpostMap";
 
-export default function SubmitNewsPost() {
+//export async function getStaticProps() {
+//// ..the/fetch/path/ends/with/'startup'/sorting/param
+//const res = await fetch("http://localhost:5000/api/dpost/sort/new").then(
+//function (response) {
+//return response.json();
+//}
+//);
+//return {
+//props: { post: res },
+//};
+//}
+
+export default function SubmitNewsPost({ post }) {
   const [session, loading] = useSession();
   const [userPosts, setUserPosts] = useState();
-  const [userId, setUserId] = useState();
+  const [userId, setUserId] = useState("");
   //const [content, setContent] = useState();
 
   //useEffect(() => {
@@ -58,7 +70,9 @@ export default function SubmitNewsPost() {
   return (
     <Layout>
       <Head>
-        <title>Discussion</title>
+        {/*metadata*/}
+        <title>Fellowship Of Christion Developers</title>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
         <div>
@@ -70,7 +84,7 @@ export default function SubmitNewsPost() {
         </div>
         <h2>My Post History</h2>
         <div>
-          <DpostMap posts={userPosts} />
+          <DpostMap posts={userPosts} session={session} />
         </div>
       </main>
     </Layout>

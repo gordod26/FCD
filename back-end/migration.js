@@ -122,8 +122,8 @@ CREATE INDEX path_comments_idx ON fellowshipdb.public.cmmts USING btree(path);
 
 const votesSchema = `
 CREATE TABLE fellowshipdb.public.votes (
-user_id integer not null references users(id),
-post_id integer not null references dposts(id),
+user_id integer not null references users(id) ON DELETE CASCADE,
+post_id integer not null references dposts(id) ON DELETE CASCADE,
 primary key (user_id, post_id)
 )`;
 //const dpostTblQry = `

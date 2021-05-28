@@ -3,6 +3,7 @@ import DpostLayout from "./DpostLayout";
 
 function DpostMap(props) {
   let posts = props.posts;
+  let session = props.session;
 
   //RETURNS ALL PROPERTIES OF PROP
   //console.log(posts);
@@ -15,7 +16,7 @@ function DpostMap(props) {
             return (
               <li key={post.id}>
                 <DpostLayout
-                  session={props.session}
+                  session={session}
                   title={post.title}
                   url={post.url}
                   votes={post.votes}

@@ -8,11 +8,11 @@ import { useSession } from "next-auth/client";
 
 export async function getStaticProps() {
   // ..the/fetch/path/ends/with/'startup'/sorting/param
-  const res = await fetch("http://localhost:5000/api/dpost/sort/votes").then(
-    function (response) {
-      return response.json();
-    }
-  );
+  const res = await fetch(
+    "http://localhost:5000/api/dpost/sort/votes/discussion"
+  ).then(function (response) {
+    return response.json();
+  });
   return {
     props: { post: res },
   };
@@ -20,7 +20,10 @@ export async function getStaticProps() {
 
 export default function Home({ post }) {
   //Authentication session w/ next-auth
-  const [sortMethod, setSortMethod] = useState("votes");
+  const [sortMethod, setSortMethod] = useState({
+    sortMethod: "votes",
+    postType: "discussion",
+  });
   const [posts, setPosts] = useState(post);
   const [session, loading] = useSession();
   //console.log("Dposts returned to /pages/index", posts);
@@ -29,7 +32,11 @@ export default function Home({ post }) {
   // SORTING LOGIC ////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
   useEffect(() => {
-    Dhelper.getSortedPosts(sortMethod, setPosts);
+    Dhelper.getSortedPosts(
+      sortMethod.sortMethod,
+      sortMethod.postType,
+      setPosts
+    );
   }, [sortMethod]);
   return (
     <>
@@ -42,14 +49,14 @@ export default function Home({ post }) {
         <h1>Discussion</h1>
         <button
           onClick={function () {
-            setSortMethod("new");
+            setSortMethod({ ...sortMethod, sortMethod: "new" });
           }}
         >
           new
         </button>
         <button
           onClick={function () {
-            setSortMethod("votes");
+            setSortMethod({ ...sortMethod, sortMethod: "votes" });
           }}
         >
           votes
