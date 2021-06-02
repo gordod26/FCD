@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import DpostMap from "../components/DpostMap";
 import Dhelper from "../utils/dPostUtils";
 import { useSession } from "next-auth/client";
+import { Page, Text } from "@geist-ui/react";
 
 export async function getStaticProps() {
   // ..the/fetch/path/ends/with/'startup'/sorting/param
@@ -39,7 +40,7 @@ export default function Home({ post }) {
     );
   }, [sortMethod]);
   return (
-    <>
+    <Page dotBackdrop size="mini">
       <Head>
         {/*metadata*/}
         <title>Fellowship Of Christion Developers</title>
@@ -63,6 +64,6 @@ export default function Home({ post }) {
         </button>
         <DpostMap posts={posts} session={session} />
       </Layout>
-    </>
+    </Page>
   );
 }

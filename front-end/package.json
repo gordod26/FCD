@@ -8,15 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@geist-ui/react": "*",
     "@material-ui/core": "*",
     "@material-ui/icons": "*",
     "@prisma/client": "*",
     "axios": "*",
     "bootstrap": "*",
-    "cors": "*",
-    "errorhandler": "*",
-    "helmet": "*",
-    "morgan": "*",
     "next": "^10.1.3",
     "next-auth": "*",
     "pg": "*",
