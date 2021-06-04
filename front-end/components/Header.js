@@ -1,53 +1,41 @@
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/client";
+import { Tabs } from "@geist-ui/react";
+import { useRouter } from "next/router";
+import { Button, Text } from "@geist-ui/react";
 
 export default function Header() {
   const [session, loading] = useSession();
+  const router = useRouter();
+
   return (
     <header>
+      <h1 style={{ display: "inline-block" }}>FCD</h1>
+      {!session && (
+        <>
+          <Button auto shadow style={{ float: "right" }} onClick={signIn}>
+            Sign In
+          </Button>
+        </>
+      )}
+      {session && (
+        <>
+          <div style={{ float: "right" }}>
+            <Text p small style={{ margin: "0" }}>
+              {session.user.email}
+            </Text>
+            <Button auto="true" style={{ float: "right" }} onClick={signOut}>
+              sign out
+            </Button>
+          </div>
+        </>
+      )}
       <nav>
-        <h1>Fellowship of Christian Developers</h1>
-        <ul>
-          <li>
-            <Link href="/about">
-              <a>About</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/">
-              <a>Discussion</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/openSource">
-              <a>Projects</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/submitNewsPost">
-              <a>Share</a>
-            </Link>
-          </li>
-        </ul>
-        {!session && (
-          <>
-            Not signed in <br />
-            <button onClick={signIn}>Sign In</button>
-          </>
-        )}
-        {session && (
-          <>
-            Signed in as {session.user.email}
-            <br />
-            {
-              //<div>You can now access our super secret pages</div>
-              //<button>
-              //<Link href="/secret">To the secret</Link>
-              //</button>
-            }
-            <button onClick={signOut}>sign out</button>
-          </>
-        )}
+        <Tabs value={router.pathname} onChange={(route) => router.push(route)}>
+          <Tabs.Item label="About" value="/about" />
+          <Tabs.Item label="Discussion" value="/" />
+          <Tabs.Item label="Projects" value="/openSource" />
+          <Tabs.Item label="Share" value="/submitNewsPost" />
+        </Tabs>
       </nav>
     </header>
   );
