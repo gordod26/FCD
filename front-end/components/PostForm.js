@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
 import { useSession } from "next-auth/client";
+import { Button, Textarea, Radio, Text, Input } from "@geist-ui/react";
 
 export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
   const [session, loading] = useSession();
   const [post, setPost] = useState({
-    postType: "",
+    postType: "discussion",
     userId: "",
     title: "",
     url: "",
@@ -34,7 +35,6 @@ export default function PostForm() {
   const handleSubmit = (e) => {
     Dhelper.createDpost(post);
     console.log(post);
-    e.preventDefault();
     setPost({
       ...post,
       title: "",
@@ -50,62 +50,61 @@ export default function PostForm() {
   return (
     <div>
       <h1>Share</h1>
-      <form
-        onSubmit={function () {
+      <div onChange={handleRadioChange}>
+        <Radio.Group value="discussion" useRow>
+          <Radio value="discussion" required name="postType" id="discussion">
+            Discussion
+          </Radio>
+          <Radio value="project" id="discussion" name="postType required">
+            Project
+          </Radio>
+        </Radio.Group>
+      </div>
+      <Input
+        type="title"
+        placeholder="Descriptive Title"
+        id="title"
+        name="title"
+        value={post.title}
+        onChange={handleInputChange}
+        required
+      ></Input>
+      <br />
+      <Input
+        type="url"
+        placeholder="URL"
+        id="url"
+        name="url"
+        value={post.url}
+        onChange={handleInputChange}
+        required
+      ></Input>
+      <br />
+      <Text b> or </Text>
+      <br />
+      <Textarea
+        width="50%"
+        placeholder="Text Post"
+        id="text"
+        name="text"
+        value={post.text}
+        onChange={handleInputChange}
+      ></Textarea>
+      <br />
+      <Button
+        auto
+        type="secondary"
+        size="small"
+        onClick={function () {
           if (confirm("Submit Post?")) {
             handleSubmit();
+            window.location.reload();
           }
         }}
+        style={{ marginTop: "5px" }}
       >
-        <div onChange={handleRadioChange}>
-          <input
-            type="radio"
-            id="discussion"
-            name="postType"
-            value="discussion"
-            required
-          />
-          <label for="discussion">Discussion</label>
-          <br />
-          <input
-            type="radio"
-            id="project"
-            name="postType"
-            value="project"
-            required
-          />
-          <label for="project">Project</label>
-        </div>
-        <label htmlFor="title">Title </label>
-        <input
-          type="title"
-          id="title"
-          name="title"
-          value={post.title}
-          onChange={handleInputChange}
-          required
-        />
-        <br />
-        <label htmlFor="url">URL </label>
-        <input
-          type="url"
-          name="url"
-          value={post.url}
-          onChange={handleInputChange}
-        />
-        <br />
-        <b>or</b>
-        <br />
-        <label htmlFor="text">Text </label>
-        <textarea
-          id="text"
-          name="text"
-          value={post.text}
-          onChange={handleInputChange}
-        />
-        <br />
-        <input type="submit" value="Submit" />
-      </form>
+        Submit Post
+      </Button>
     </div>
   );
 }

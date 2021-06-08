@@ -46,7 +46,7 @@ export default function Home({ post }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1>Projects</h1>
+        <h2>Projects</h2>
         <button
           onClick={function () {
             setSortMethod({ ...sortMethod, sortMethod: "new" });

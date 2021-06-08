@@ -23,7 +23,12 @@ export default function Header() {
             <Text p small style={{ margin: "0" }}>
               {session.user.email}
             </Text>
-            <Button auto="true" style={{ float: "right" }} onClick={signOut}>
+            <Button
+              auto="true"
+              shadow
+              style={{ float: "right" }}
+              onClick={signOut}
+            >
               sign out
             </Button>
           </div>

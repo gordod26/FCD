@@ -9,6 +9,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@geist-ui/react": "*",
+        "@geist-ui/react-icons": "^1.0.1",
         "@material-ui/core": "*",
         "@material-ui/icons": "*",
         "@prisma/client": "*",
@@ -18,6 +19,7 @@
         "next-auth": "*",
         "pg": "*",
         "prisma": "*",
+        "psl": "^1.8.0",
         "react": "^17.0.2",
         "react-bootstrap": "*",
         "react-dom": "^17.0.2",
@@ -76,6 +78,15 @@
       "integrity": "sha512-vHn3yOAyXon88m6UnaU9e16iC5U0hFwYbwlroD05dbx4GbH/f5uRhmQ5QI4nkTvVi3/m0++cLGR2ek9U8WY6hg==",
       "dependencies": {
         "styled-jsx": "3.3.0"
+      }
+    },
+    "node_modules/@geist-ui/react-icons": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/@geist-ui/react-icons/-/react-icons-1.0.1.tgz",
+      "integrity": "sha512-/phre1NwXT0Mrxcq3yb+KksJ16/ykptgxI7+jh5pmDZfxnIMPlBWFBGDK0yw96oi752Wuo24X6+tkWjVe/g5Bg==",
+      "peerDependencies": {
+        "@geist-ui/react": ">=1.0.0",
+        "react": ">=16.13.0"
       }
     },
     "node_modules/@geist-ui/react/node_modules/source-map": {
@@ -4014,8 +4025,7 @@
     "node_modules/psl": {
       "version": "1.8.0",
       "resolved": "https://registry.npmjs.org/psl/-/psl-1.8.0.tgz",
-      "integrity": "sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==",
-      "optional": true
+      "integrity": "sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ=="
     },
     "node_modules/public-encrypt": {
       "version": "4.0.3",
@@ -5533,6 +5543,12 @@
           }
         }
       }
+    },
+    "@geist-ui/react-icons": {
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/@geist-ui/react-icons/-/react-icons-1.0.1.tgz",
+      "integrity": "sha512-/phre1NwXT0Mrxcq3yb+KksJ16/ykptgxI7+jh5pmDZfxnIMPlBWFBGDK0yw96oi752Wuo24X6+tkWjVe/g5Bg==",
+      "requires": {}
     },
     "@hapi/accept": {
       "version": "5.0.2",
@@ -8579,8 +8595,7 @@
     "psl": {
       "version": "1.8.0",
       "resolved": "https://registry.npmjs.org/psl/-/psl-1.8.0.tgz",
-      "integrity": "sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==",
-      "optional": true
+      "integrity": "sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ=="
     },
     "public-encrypt": {
       "version": "4.0.3",

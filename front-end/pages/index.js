@@ -1,11 +1,10 @@
 import Head from "next/head";
 import React, { useState, useEffect, useRef } from "react";
-import styles from "../styles/Home.module.css";
 import Layout from "../components/Layout";
 import DpostMap from "../components/DpostMap";
 import Dhelper from "../utils/dPostUtils";
 import { useSession } from "next-auth/client";
-import { Page, Text } from "@geist-ui/react";
+import { Pagination, Select } from "@geist-ui/react";
 
 export async function getStaticProps() {
   // ..the/fetch/path/ends/with/'startup'/sorting/param
@@ -28,6 +27,13 @@ export default function Home({ post }) {
   const [posts, setPosts] = useState(post);
   const [session, loading] = useSession();
   //console.log("Dposts returned to /pages/index", posts);
+  //
+  const selectorHandler = (e) => {
+    setSortMethod({
+      ...sortMethod,
+      sortMethod: e,
+    });
+  };
 
   /////////////////////////////////////////////////////////////////////////////
   // SORTING LOGIC ////////////////////////////////////////////////////////////
@@ -40,30 +46,25 @@ export default function Home({ post }) {
     );
   }, [sortMethod]);
   return (
-    <Page dotBackdrop size="mini">
+    <>
       <Head>
         {/*metadata*/}
         <title>Fellowship Of Christion Developers</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <h1>Discussion</h1>
-        <button
-          onClick={function () {
-            setSortMethod({ ...sortMethod, sortMethod: "new" });
-          }}
+        <Select
+          placeholder="Sort By..."
+          value={sortMethod.sortMethod}
+          onChange={selectorHandler}
+          style={{ marginBottom: "20px" }}
         >
-          new
-        </button>
-        <button
-          onClick={function () {
-            setSortMethod({ ...sortMethod, sortMethod: "votes" });
-          }}
-        >
-          votes
-        </button>
+          <Select.Option value="votes">votes</Select.Option>
+          <Select.Option value="new">new</Select.Option>
+        </Select>
         <DpostMap posts={posts} session={session} />
+        <Pagination />
       </Layout>
-    </Page>
+    </>
   );
 }

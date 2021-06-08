@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
 import {
@@ -8,9 +8,16 @@ import {
   deleteVote,
   updateVoteCount,
 } from "../utils/voteHelpers";
+import { Text, Divider, Spacer, Link } from "@geist-ui/react";
+import {
+  ChevronUpCircleFill,
+  ChevronUpCircle,
+  Trash,
+} from "@geist-ui/react-icons";
 
 export default NewsPostLayout;
 
+//START////////////////////////////////////////////////////////////////////////
 function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   // STATES ///////////////////////////////////////////////////////////////////
@@ -28,6 +35,8 @@ function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   const title = props.title;
   const url = props.url;
+  const parsedUrl = url ? new URL(props.url) : "";
+  const hostname = parsedUrl.hostname;
   const id = props.id;
   var postDate = props.created.slice(0, props.created.indexOf("T"));
   /////////////////////////////////////////////////////////////////////////////
@@ -58,6 +67,8 @@ function NewsPostLayout(props) {
     Dhelper.deleteDpost(id);
   };
   /////////////////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////////////
   // console.log("DpostLayout posterid:", posterId);
   // console.log(props);
   /////////////////////////////////////////////////////////////////////////////
@@ -85,23 +96,43 @@ function NewsPostLayout(props) {
     // LOGGED OUT RETURN ...///////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
     return (
-      <div style={{ border: "1px solid grey" }}>
-        {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
-      <span>{postInfo.rank} </span>
-      */}
-        <button>{voteState.didVote ? "-1" : "+1"}</button>
-        <p>
-          <a href={url}>{title} </a>
-          <sub>
-            <a href={url}>({url})</a>
-          </sub>
-        </p>
-        <p>
-          {voteState.voteDisplay} Pts by {posterName} | hide | {/*numComments*/}{" "}
-          <Link href="/comments">
-            <a>comments</a>
-          </Link>
-        </p>
+      <div>
+        {url ? (
+          <Text b>
+            <a href={url}>{title} </a>
+            <Text small>{hostname}</Text>
+          </Text>
+        ) : (
+          <Text b>
+            <Link href={`/posts/${id}`}>
+              <a>{title} </a>
+            </Link>
+            <Text small>[text]</Text>
+            <sub>{/*id*/}</sub>
+          </Text>
+        )}
+        <br />
+        <Text
+          style={{
+            // centers upvote icon
+            marginTop: "0px",
+            display: "flex",
+            alignItems: "center",
+            height: "16px",
+          }}
+        >
+          {voteState.didVote ? (
+            <ChevronUpCircleFill />
+          ) : (
+            <ChevronUpCircle size={19} />
+          )}
+          <Spacer inline x={0.2} />
+          {voteState.voteDisplay} Pts by {posterName} &nbsp; | &nbsp;
+          <NextLink href={`/posts/${id}`}>
+            <Link underline>comments</Link>
+          </NextLink>
+        </Text>
+        <Divider y={0} />
       </div>
     );
   }
@@ -116,49 +147,59 @@ function NewsPostLayout(props) {
   //console.log(posterName);
   ///////////////////////////////////////////////////////////////////
   return (
-    <div style={{ border: "1px solid grey" }}>
-      {/* WAITING TO ADD RANK, MAY BE ABLE TO DO OUTSIDE OF STATE IN <li>
-      <span>{postInfo.rank} </span>
-      */}
-      <button onClick={handleVote}>{voteState.didVote ? "-1" : "+1"}</button>
+    <div>
       {url ? (
-        <p>
+        <Text b>
           <a href={url}>{title} </a>
-          <sub>
-            <a href={url}>({url})</a>
-          </sub>
-          <sub>{id}</sub>
-        </p>
+          <Text small>{hostname}</Text>
+        </Text>
       ) : (
-        <p>
+        <Text b>
           <Link href={`/posts/${id}`}>
             <a>{title} </a>
           </Link>
-          <sub>(text)</sub>
-          <sub>{id}</sub>
-        </p>
+          <Text small> [text]</Text>
+          <sub>{/*id*/}</sub>
+        </Text>
       )}
-      <p>
-        {voteState.voteDisplay} Pts By {posterName} {/*| hide*/} |{" "}
-        {/*numComments*/}{" "}
-        <Link href={`/posts/${id}`}>
-          <a>comments</a>
-        </Link>
-        <span> | {postDate} </span>
-      </p>
-      {props.session.user.name === posterName ? (
-        <form
-          onSubmit={function () {
-            if (confirm("Delete Post Permanently?")) {
-              handleDelete();
-            }
-          }}
-        >
-          <input type="submit" value="Trash" />
-        </form>
-      ) : (
-        ""
-      )}
+      <br />
+      <Text
+        style={{
+          // centers upvote icon
+          marginTop: "0px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        {voteState.didVote ? (
+          <ChevronUpCircleFill size={19} onClick={handleVote} />
+        ) : (
+          <ChevronUpCircle size={19} onClick={handleVote} />
+        )}
+        <Spacer inline x={0.2} />
+        {voteState.voteDisplay} Pts by {posterName} &nbsp; | &nbsp;
+        <NextLink href={`/posts/${id}`}>
+          <Link underline>comments</Link>
+        </NextLink>
+        {props.session.user.name === posterName ? (
+          <>
+            &nbsp; | &nbsp;
+            <Trash
+              size={19}
+              style={{ marginTop: "auto" }}
+              onClick={function () {
+                if (confirm("Delete Post Permanently?")) {
+                  handleDelete();
+                  window.location.reload();
+                }
+              }}
+            />
+          </>
+        ) : (
+          ""
+        )}
+      </Text>
+      <Divider y={0} />
     </div>
   );
 }
