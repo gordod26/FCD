@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import { useSession } from "next-auth/client";
+import { Button, Textarea, Spacer, Text, Card, Divider } from "@geist-ui/react";
 
 export async function getStaticPaths() {
   const paths = await axios
@@ -86,19 +87,27 @@ export default function Post({ post, cmmts }) {
       </Head>
       <Layout>
         <div>
-          <h1>{p.title}</h1>
-          <p>{p.text ? p.text : p.url}</p>
-          <p>{p.created_at.slice(0, p.created_at.indexOf("T"))}</p>
+          <Card width="717px">
+            <Card.Content>
+              <Text h2>{p.title}</Text>
+              <Text>{p.text ? p.text : p.url}</Text>
+              <Text>{p.created_at.slice(0, p.created_at.indexOf("T"))}</Text>
+            </Card.Content>
+          </Card>
+          <Spacer y={0.5} />
           <div>
             {!commentBox ? (
               <div>
-                <button
+                <Button
+                  auto
+                  type="secondary"
+                  ghost
                   onClick={function () {
                     setCommentBox(true);
                   }}
                 >
                   Comment
-                </button>
+                </Button>
               </div>
             ) : (
               <form
@@ -108,16 +117,41 @@ export default function Post({ post, cmmts }) {
                   }
                 }}
               >
-                <textarea
+                <Textarea
+                  width="50%"
+                  placeholder="Text Post"
                   id="cmmt"
                   name="cmmt"
                   value={comment.text}
                   onChange={handleInputChange}
-                />
+                ></Textarea>
                 <br />
-                <input type="submit" value="Submit" />
+                <Button
+                  auto
+                  type="secondary"
+                  ghost
+                  onClick={function (e) {
+                    if (confirm("Submit Comment?")) {
+                      handleSubmit(e);
+                    }
+                  }}
+                >
+                  Submit
+                </Button>
+                <Spacer x={0.5} inline />
+                <Button
+                  auto
+                  type="secondary"
+                  ghost
+                  onClick={function () {
+                    setCommentBox(false);
+                  }}
+                >
+                  Close
+                </Button>
               </form>
             )}
+            <Spacer y={1} />
           </div>
           <CommentMap post={post} cmmts={c} session={session} />
         </div>
