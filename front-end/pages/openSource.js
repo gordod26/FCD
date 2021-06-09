@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import DpostMap from "../components/DpostMap";
 import Dhelper from "../utils/dPostUtils";
 import { useSession } from "next-auth/client";
+import { Pagination, Select } from "@geist-ui/react";
 
 export async function getStaticProps() {
   // ..the/fetch/path/ends/with/'startup'/sorting/param
@@ -28,6 +29,12 @@ export default function Home({ post }) {
   const [session, loading] = useSession();
   //console.log("Dposts returned to /pages/index", posts);
 
+  const selectorHandler = (e) => {
+    setSortMethod({
+      ...sortMethod,
+      sortMethod: e,
+    });
+  };
   /////////////////////////////////////////////////////////////////////////////
   // SORTING LOGIC ////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
@@ -47,21 +54,17 @@ export default function Home({ post }) {
       </Head>
       <Layout>
         <h2>Projects</h2>
-        <button
-          onClick={function () {
-            setSortMethod({ ...sortMethod, sortMethod: "new" });
-          }}
+        <Select
+          placeholder="Sort By..."
+          value={sortMethod.sortMethod}
+          onChange={selectorHandler}
+          style={{ marginBottom: "20px" }}
         >
-          new
-        </button>
-        <button
-          onClick={function () {
-            setSortMethod({ ...sortMethod, sortMethod: "votes" });
-          }}
-        >
-          votes
-        </button>
+          <Select.Option value="votes">votes</Select.Option>
+          <Select.Option value="new">new</Select.Option>
+        </Select>
         <DpostMap posts={posts} session={session} />
+        <Pagination />
       </Layout>
     </>
   );
