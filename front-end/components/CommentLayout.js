@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getidbyemail } from "../utils/helpers";
 import { cmmtHelper } from "../utils/cmmtHelper";
+import { Button, Spacer, Text, Collapse, Textarea } from "@geist-ui/react";
 
 // This is the child component of CommentMap. it handles nesting and comment replies as well
 export default function Comment(props) {
@@ -36,7 +37,7 @@ export default function Comment(props) {
     if (props.session) {
       getidbyemail(props.session.user.email, reply, setReply);
     }
-  }, [props.session]);
+  }, [props.session, textBoxToggle]);
 
   //console.log("childComments of commentLayout", childComments);
   //console.log("user", user);
@@ -65,31 +66,30 @@ export default function Comment(props) {
     });
   };
 
-  const handleEdit = (e) => {};
-
   return (
-    <div
+    <Collapse
+      subtitle={props.comment.name}
+      initialVisible
       style={{
-        borderLeft: "1px solid grey",
         marginLeft: "50px",
-        marginBottom: "10px",
       }}
     >
-      <b>userId:{props.comment.name}</b>
-      <p>
+      <Text>
         comment id: <b>{props.comment.id}</b> text {props.comment.cmmt}
-      </p>
+      </Text>
 
       {!textBoxToggle.replyBox ? (
-        <div>
-          <button
-            onClick={function () {
-              setTextBoxToggle({ ...textBoxToggle, replyBox: true });
-            }}
-          >
-            Reply
-          </button>
-        </div>
+        <Button
+          size="mini"
+          auto
+          ghost
+          type="secondary"
+          onClick={function () {
+            setTextBoxToggle({ ...textBoxToggle, replyBox: true });
+          }}
+        >
+          Reply
+        </Button>
       ) : (
         <form
           onSubmit={function (e) {
@@ -98,20 +98,51 @@ export default function Comment(props) {
             }
           }}
         >
-          <textarea
+          <Textarea
+            width="50%"
+            placeholder="Comment"
             id="reply"
             name="reply"
-            defaultValue={reply.text}
+            value={reply.text}
             onChange={handleInputChange}
-          />
-          <br />
-          <input type="submit" value="Submit" />
+          ></Textarea>
+          <Spacer y={0.5} />
+          <Button
+            size="mini"
+            auto
+            type="secondary"
+            ghost
+            onClick={function (e) {
+              if (confirm("Submit Reply?")) {
+                handleSubmit(e);
+                window.location.reload();
+              }
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            size="mini"
+            auto
+            type="secondary"
+            ghost
+            onClick={function () {
+              setTextBoxToggle({ ...textBoxToggle, replyBox: false });
+            }}
+          >
+            Close
+          </Button>
         </form>
       )}
       {/* EDIT BUTTON*/}
+      <Spacer inline x={0.5} />
       {reply.userId === props.comment.user_id ? (
         !textBoxToggle.editBox ? (
-          <button
+          <Button
+            auto
+            size="mini"
+            type="secondary"
+            ghost
             onClick={() => {
               setTextBoxToggle(
                 { ...textBoxToggle, editBox: true },
@@ -119,8 +150,8 @@ export default function Comment(props) {
               );
             }}
           >
-            Edit Post
-          </button>
+            Edit
+          </Button>
         ) : (
           <form
             onSubmit={function (e) {
@@ -147,8 +178,9 @@ export default function Comment(props) {
           key={childComments.indexOf(c)}
           comment={c}
           allComments={props.allComments}
+          session={props.session}
         />
       ))}
-    </div>
+    </Collapse>
   );
 }

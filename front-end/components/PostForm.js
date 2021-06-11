@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
 import { useSession } from "next-auth/client";
-import { Button, Textarea, Radio, Text, Input } from "@geist-ui/react";
+import { Button, Textarea, Spacer, Radio, Text, Input } from "@geist-ui/react";
 
 export default function PostForm() {
   //const [formData, setFormData] = useReducer(formReducer, {});
@@ -49,7 +49,7 @@ export default function PostForm() {
 
   return (
     <div>
-      <h1>Share</h1>
+      <Text h2>Share</Text>
       <div onChange={handleRadioChange}>
         <Radio.Group value="discussion" useRow>
           <Radio value="discussion" required name="postType" id="discussion">
@@ -69,7 +69,7 @@ export default function PostForm() {
         onChange={handleInputChange}
         required
       ></Input>
-      <br />
+      <Spacer y={0.5} />
       <Input
         type="url"
         placeholder="URL"
@@ -79,9 +79,9 @@ export default function PostForm() {
         onChange={handleInputChange}
         required
       ></Input>
-      <br />
+      <Spacer y={0.5} />
       <Text b> or </Text>
-      <br />
+      <Spacer y={0.5} />
       <Textarea
         width="50%"
         placeholder="Text Post"

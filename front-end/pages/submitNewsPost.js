@@ -7,6 +7,7 @@ import PostForm from "../components/PostForm";
 import { getidbyemail } from "../utils/helpers";
 import Dhelper from "../utils/dPostUtils";
 import DpostMap from "../components/DpostMap";
+import { Divider, Card } from "@geist-ui/react";
 
 //export async function getStaticProps() {
 //// ..the/fetch/path/ends/with/'startup'/sorting/param
@@ -82,6 +83,7 @@ export default function SubmitNewsPost({ post }) {
             URL, the text (if any) will appear at the top of the thread.
           </p>
         </div>
+        <Divider />
         <h2>My Post History</h2>
         <div>
           <DpostMap posts={userPosts} session={session} />

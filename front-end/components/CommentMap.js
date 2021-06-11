@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CommentLayout from "./CommentLayout";
+import { Collapse } from "@geist-ui/react";
 
 export default function CommentMap({ post, cmmts, session }) {
   const [comments, setComments] = useState(cmmts);
@@ -12,13 +13,15 @@ export default function CommentMap({ post, cmmts, session }) {
     <div>
       {parentComments.map((c) => {
         return (
-          <CommentLayout
-            key={c.id}
-            post={post}
-            allComments={comments}
-            comment={c}
-            session={session}
-          />
+          <Collapse.Group>
+            <CommentLayout
+              key={c.id}
+              post={post}
+              allComments={comments}
+              comment={c}
+              session={session}
+            />
+          </Collapse.Group>
         );
       })}
     </div>
