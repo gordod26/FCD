@@ -10,7 +10,7 @@ import { Pagination, Select } from "@geist-ui/react";
 export async function getStaticProps() {
   // ..the/fetch/path/ends/with/'startup'/sorting/param
   const res = await fetch(
-    "http://localhost:5000/api/dpost/sort/votes/project"
+    "http://localhost:5000/api/dpost/sort/votes/project/1"
   ).then(function (response) {
     return response.json();
   });
@@ -24,6 +24,7 @@ export default function Home({ post }) {
   const [sortMethod, setSortMethod] = useState({
     sortMethod: "votes",
     postType: "project",
+    page: 1,
   });
   const [posts, setPosts] = useState(post);
   const [session, loading] = useSession();
@@ -41,6 +42,7 @@ export default function Home({ post }) {
   useEffect(() => {
     Dhelper.getSortedPosts(
       sortMethod.sortMethod,
+      sortMethod.page,
       sortMethod.postType,
       setPosts
     );

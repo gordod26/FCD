@@ -24,14 +24,17 @@ dpostRouter.param("dpostId", (req, res, next, dpostId) => {
 ///////////////////////////////////////////////////////////////////////////////
 // GET DPOSTS SORTED BY NEW/VOTES //////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-dpostRouter.get("/sort/:sortMethod/:sortGroup", (req, res, next) => {
+dpostRouter.get("/sort/:sortMethod/:sortGroup/:page", (req, res, next) => {
+  const pageOffset = (req.params.page - 1) * 10;
   const sortGroup = req.params.sortGroup;
   if (req.params.sortMethod === "new" && sortGroup === "discussion") {
     db.query(
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
      WHERE dposts.user_id = users.id AND dposts.post_type = 'discussion'
-      ORDER BY dposts.created_at DESC`,
+      ORDER BY dposts.created_at DESC
+      Limit 10 OFFSET $1`,
+      [pageOffset],
       (err, r) => {
         if (err) {
           next(err);
@@ -46,7 +49,9 @@ dpostRouter.get("/sort/:sortMethod/:sortGroup", (req, res, next) => {
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
      WHERE dposts.user_id = users.id AND post_type = 'discussion'
-      ORDER BY dposts.votes DESC`,
+      ORDER BY dposts.votes DESC
+      Limit 10 OFFSET $1`,
+      [pageOffset],
       (err, r) => {
         if (err) {
           next(err);
@@ -61,7 +66,9 @@ dpostRouter.get("/sort/:sortMethod/:sortGroup", (req, res, next) => {
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
      WHERE dposts.user_id = users.id AND dposts.post_type = 'project'
-      ORDER BY dposts.created_at DESC`,
+      ORDER BY dposts.created_at DESC
+      Limit 10 OFFSET $1`,
+      [pageOffset],
       (err, r) => {
         if (err) {
           next(err);
@@ -76,13 +83,64 @@ dpostRouter.get("/sort/:sortMethod/:sortGroup", (req, res, next) => {
       `SELECT dposts.*, name, email, image 
      FROM Dposts, users 
      WHERE dposts.user_id = users.id AND dposts.post_type = 'project'
-      ORDER BY dposts.votes DESC`,
+      ORDER BY dposts.votes DESC
+      limit 10 offset $1`,
+      [pageOffset],
       (err, r) => {
         if (err) {
           next(err);
         } else {
           res.status(200).json(r.rows);
           console.log("sort NEW");
+        }
+      }
+    );
+  }
+});
+///////////////////////////////////////////////////////////////////////////////
+// GET DPOSTS count for pagination ////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+dpostRouter.get("/count/:sortGroup", (req, res, next) => {
+  const sortGroup = req.params.sortGroup;
+  const numPages = (count) => {
+    return Math.ceil(count / 10);
+  };
+  const numPagesArray = (numPages) => {
+    let array = [];
+    let i = 1;
+    for (i; i <= numPages; i++) {
+      array.push({ params: { index: `${i}` } });
+    }
+    return res.status(200).json(array);
+  };
+
+  if (sortGroup === "discussion") {
+    db.query(
+      `SELECT COUNT(*)
+  FROM Dposts
+  WHERE dposts.post_type = 'discussion';`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          finPages = numPages(r.rows[0].count);
+          numPagesArray(finPages);
+          console.log("num discussion posts");
+        }
+      }
+    );
+  } else if (sortGroup === "project") {
+    db.query(
+      `SELECT COUNT(*)
+  FROM Dposts
+  WHERE dposts.post_type = 'project';`,
+      (err, r) => {
+        if (err) {
+          next(err);
+        } else {
+          finPages = numPages(r.rows[0].count);
+          numPagesArray(finPages);
+          console.log("num project posts");
         }
       }
     );
