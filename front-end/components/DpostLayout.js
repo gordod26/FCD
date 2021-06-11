@@ -2,18 +2,13 @@ import React, { useState, useEffect } from "react";
 import NextLink from "next/link";
 import Dhelper from "../utils/dPostUtils";
 import { getidbyemail } from "../utils/helpers";
-import {
-  postVote,
-  getVote,
-  deleteVote,
-  updateVoteCount,
-} from "../utils/voteHelpers";
 import { Text, Divider, Spacer, Link } from "@geist-ui/react";
 import {
   ChevronUpCircleFill,
   ChevronUpCircle,
   Trash,
 } from "@geist-ui/react-icons";
+import VoteButton from "./VoteButton";
 
 export default NewsPostLayout;
 
@@ -42,26 +37,6 @@ function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   // HANDLERS /////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
-  const handleVote = () => {
-    if (voteState.didVote && voteState.voteDisplay <= 1) {
-      return;
-    } else if (voteState.didVote) {
-      deleteVote(voteState.userId, voteState.postId);
-      setVoteState({
-        ...voteState,
-        didVote: !voteState.didVote,
-        voteDisplay: voteState.voteDisplay - 1,
-      });
-    } else {
-      postVote(voteState.userId, voteState.postId);
-      setVoteState({
-        ...voteState,
-        didVote: !voteState.didVote,
-        voteDisplay: voteState.voteDisplay + 1,
-      });
-    }
-  };
-
   /////////////////////////////////////////////////////////////////////////////
   const handleDelete = () => {
     Dhelper.deleteDpost(id);
@@ -71,26 +46,6 @@ function NewsPostLayout(props) {
   /////////////////////////////////////////////////////////////////////////////
   // console.log("DpostLayout posterid:", posterId);
   // console.log(props);
-  /////////////////////////////////////////////////////////////////////////////
-  // USEEFFECT HOOK ///////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    if (props.session) {
-      getidbyemail(props.session.user.email, voteState, setVoteState);
-      console.log("layout getemailbyid");
-    }
-  }, [props.session]);
-  //checks if user voted on this post yet sets didVote to t/f?/////////////////
-  useEffect(() => {
-    if (voteState.userId) {
-      getVote(voteState.userId, voteState.postId, voteState, setVoteState);
-    }
-  }, [voteState.userId]);
-  /////////////////////////////////////////////////////////////////////////////
-  useEffect(() => {
-    updateVoteCount(props.id);
-  }, []);
-
   if (!props.session) {
     ///////////////////////////////////////////////////////////////////////////
     // LOGGED OUT RETURN ...///////////////////////////////////////////////////
@@ -121,13 +76,13 @@ function NewsPostLayout(props) {
             height: "16px",
           }}
         >
-          {voteState.didVote ? (
-            <ChevronUpCircleFill />
-          ) : (
-            <ChevronUpCircle size={19} />
-          )}
-          <Spacer inline x={0.2} />
-          {voteState.voteDisplay} Pts by {posterName} &nbsp; | &nbsp;
+          {/*upvote component goes here*/}
+          <VoteButton
+            session={props.session}
+            id={props.id}
+            votes={props.votes}
+          />
+          &nbsp;by {posterName} &nbsp; | &nbsp;
           <NextLink href={`/posts/${id}`}>
             <Link underline>comments</Link>
           </NextLink>
@@ -171,13 +126,8 @@ function NewsPostLayout(props) {
           alignItems: "center",
         }}
       >
-        {voteState.didVote ? (
-          <ChevronUpCircleFill size={19} onClick={handleVote} />
-        ) : (
-          <ChevronUpCircle size={19} onClick={handleVote} />
-        )}
-        <Spacer inline x={0.2} />
-        {voteState.voteDisplay} Pts by {posterName} &nbsp; | &nbsp;
+        <VoteButton session={props.session} id={props.id} votes={props.votes} />
+        &nbsp;by {posterName} &nbsp; | &nbsp;
         <NextLink href={`/posts/${id}`}>
           <Link underline>comments</Link>
         </NextLink>
